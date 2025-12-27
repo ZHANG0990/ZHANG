@@ -1,0 +1,213 @@
+/*******************************************************
+Project : Multi-Function Alarm & Chaser
+Description: 
+  - Mode 0: Adjustable Speed LED Chaser (Display Speed)
+  - Mode 1: Security Alarm (Display 0000)
+*******************************************************/
+
+#include <mega16.h>
+
+// 0-9 段码表
+// Index 0-9: 数字 0-9
+// Index 10 : 全灭 (0x00)
+flash char seg_code[] = {
+    0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 
+    0x00 
+};
+
+// 系统状态: 0=巡航(流水灯), 1=报警
+unsigned char sys_mode = 0; 
+
+// 系统变量
+unsigned int  adc_val = 0;
+unsigned char speed_level = 0;
+unsigned int  timer_cnt = 0;
+
+// 流水灯变量
+unsigned char led_pos = 0; 
+unsigned char led_dir = 0; // 0=左移, 1=右移
+
+// 按键与蜂鸣器变量
+unsigned char key_lock = 0;
+unsigned char buzzer_state = 0; 
+
+// ============================================
+// 功能函数
+// ============================================
+
+void disable_jtag(void) {
+    MCUCSR |= (1<<JTD);
+    MCUCSR |= (1<<JTD);
+}
+
+// ============================================
+// 中断服务程序
+// ============================================
+
+// Timer0 溢出中断: 2ms 周期
+// 负责: 逻辑核心、按键扫描、数码管刷新、蜂鸣器驱动
+interrupt [TIM0_OVF] void timer0_isr(void) {
+    static unsigned char scan_pos = 0;  // 当前扫描的数码管位 (0-3)
+    static unsigned char scan_step = 0; // 按键扫描步骤
+    unsigned char key_temp, seg_data, disp_char;
+    unsigned char buzzer_out = 0;
+    
+    // 计算延时目标：ADC值控制 speed_level (0-99)
+    // speed_level 越大，delay_target 越小，速度越快
+    unsigned int delay_target = 105 - speed_level; 
+    
+    TCNT0 = 100; // 重置定时器初值 (约2ms)
+    timer_cnt++;
+
+    // ----------------------------------------
+    // 1. 核心逻辑控制 (LED & 蜂鸣器状态)
+    // ----------------------------------------
+    if (sys_mode == 0) { 
+        // === 模式 0: 正常巡航 ===
+        
+        // 流水灯移动逻辑
+        if (timer_cnt > delay_target) { 
+            timer_cnt = 0;
+            if (led_dir == 0) {
+                led_pos++; 
+                if (led_pos > 7) led_pos = 0;
+            } else {
+                if (led_pos == 0) led_pos = 7;
+                else led_pos--;
+            }
+            PORTB = ~(1 << led_pos); // 更新LED (低电平点亮)
+        }
+        
+        buzzer_out = 0x00; // 正常模式下蜂鸣器不响(除非按键)
+        
+    } else { 
+        // === 模式 1: 警报模式 ===
+        
+        // LED 爆闪逻辑 (闪烁频率也随旋钮改变)
+        if (timer_cnt > (delay_target / 2)) { 
+            timer_cnt = 0;
+            buzzer_state = !buzzer_state; // 切换亮灭状态
+            
+            if (buzzer_state) {
+                PORTB = 0x00;      // 全亮 (所有位低电平)
+                buzzer_out = 0x80; // 蜂鸣器响
+            } else {
+                PORTB = 0xFF;      // 全灭
+                buzzer_out = 0x00; // 蜂鸣器停
+            }
+        }
+        
+        // 保持蜂鸣器状态
+        if (buzzer_state) buzzer_out = 0x80;
+    }
+
+    // ----------------------------------------
+    // 2. 矩阵按键扫描 (读取 PIND)
+    // ----------------------------------------
+    PORTA &= ~(1<<6); PORTD &= 0x0F; // 准备扫描
+    
+    if (scan_step == 0) {
+        // 扫描第1列 (PD0 Low) -> 对应 S3, S4
+        DDRD = 0x03; PORTD = 0x0E; 
+        #asm("nop") #asm("nop")
+        key_temp = PIND & 0x0C;
+        
+        // 检测 S4 按键: 切换模式 (报警/正常)
+        if ((key_temp & 0x08) == 0) { 
+            if (key_lock == 0) {
+                sys_mode = !sys_mode; // 切换模式
+                key_lock = 1;
+            }
+        }
+        scan_step = 1;
+    } else {
+        // 扫描第2列 (PD1 Low) -> 对应 S1, S2
+        DDRD = 0x03; PORTD = 0x0D; 
+        #asm("nop") #asm("nop")
+        key_temp = PIND & 0x0C;
+        
+        // 检测 S1 按键: 切换方向 (仅在正常模式下有效)
+        if ((key_temp & 0x04) == 0) { 
+            if (key_lock == 0 && sys_mode == 0) {
+                led_dir = !led_dir;
+                key_lock = 1;
+            }
+        }
+        // 松手检测
+        if ((PIND & 0x0C) == 0x0C) key_lock = 0;
+        scan_step = 0;
+    }
+
+    // ----------------------------------------
+    // 3. 数码管显示刷新
+    // ----------------------------------------
+    
+    // 决定要显示的字符索引 (disp_char)
+    if (sys_mode == 0) {
+        // [模式0] 显示速度: "  XX"
+        if (scan_pos == 0) disp_char = 10; // 空
+        else if (scan_pos == 1) disp_char = 10; // 空
+        else if (scan_pos == 2) disp_char = speed_level / 10;
+        else disp_char = speed_level % 10;
+    } else {
+        // [模式1] 报警显示: "0000"
+        disp_char = 0; // index 0 对应数字 '0'
+    }
+
+    // 获取段码并输出到 PORTC
+    DDRD = 0xF0; // 恢复端口方向用于位选
+    
+    // 安全检查防止越界
+    if (disp_char > 10) seg_data = 0x00; 
+    else seg_data = seg_code[disp_char];
+    
+    PORTC = seg_data;
+
+    // 位选控制 (PORTD 高4位) + 叠加蜂鸣器信号 (PD7)
+    switch(scan_pos) {
+        case 0: PORTD = buzzer_out | (1<<4); break; // 第1位
+        case 1: PORTD = buzzer_out | (1<<5); break; // 第2位
+        case 2: PORTD = buzzer_out | (1<<6); break; // 第3位
+        case 3: PORTA |= (1<<6); PORTD = buzzer_out; break; // 第4位 (利用PA6辅助)
+    }
+    
+    // 循环扫描下一位
+    scan_pos++;
+    if (scan_pos > 3) scan_pos = 0;
+}
+
+void main(void) {
+    disable_jtag(); // 禁用JTAG释放端口
+    
+    // === 端口初始化 ===
+    DDRA = 0x40; PORTA = 0x00; // PA6用作数码管位选辅助, PA0用作ADC输入
+    DDRB = 0xFF; PORTB = 0xFF; // LED 输出 (低电平亮)
+    DDRC = 0xFF; PORTC = 0x00; // 数码管段选
+    DDRD = 0xF0; PORTD = 0x0F; // PD0-1扫描, PD4-7位选/蜂鸣器
+    
+    // === ADC 初始化 ===
+    // AVCC参考电压, 10位精度
+    ADMUX = 0x40; 
+    ADCSRA = 0x87; // 启用ADC, 分频128
+    
+    // === 定时器0 初始化 ===
+    TCCR0 = 0x03; // 预分频 64
+    TIMSK |= 0x01; // 开启溢出中断
+    
+    #asm("sei") // 开启全局中断
+    
+    while (1) {
+        // 主循环不断读取电位器电压
+        ADCSRA |= 0x40; // 启动转换
+        while ((ADCSRA & 0x10) == 0); // 等待完成
+        ADCSRA |= 0x10; // 清除标志
+        adc_val = ADCW; // 读取结果
+        
+        // 将 0-1023 的电压值映射为 0-99 的速度等级
+        // 算法: Value * 99 / 1023
+        speed_level = (unsigned long)adc_val * 99 / 1023;
+        
+        // 限制最小速度 (防止等级为0导致延时过长或显示异常)
+        if (speed_level < 1) speed_level = 1;
+    }
+}
