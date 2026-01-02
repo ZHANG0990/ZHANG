@@ -1,0 +1,415 @@
+{% extends "base.html" %}
+
+{% block title %}系统设置{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">系统设置</h2>
+  <button id="save-settings" class="btn btn-primary">
+    <i class="fa fa-save"></i> 保存设置
+  </button>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="card lg:col-span-2">
+    <h3 class="font-bold mb-4">过滤设置</h3>
+    
+    <div class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">白流量过滤模式</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label class="flex items-center p-4 border border-light-2 rounded-lg cursor-pointer hover:border-primary/50 filter-mode-option">
+            <input type="radio" name="filter-mode" value="ai-auto" class="mr-3" checked>
+            <div>
+              <p class="font-medium">AI自动识别</p>
+              <p class="text-sm text-dark-2 mt-1">由AI模型自动识别并过滤白流量</p>
+            </div>
+          </label>
+          <label class="flex items-center p-4 border border-light-2 rounded-lg cursor-pointer hover:border-primary/50 filter-mode-option">
+            <input type="radio" name="filter-mode" value="hybrid" class="mr-3">
+            <div>
+              <p class="font-medium">规则+AI混合</p>
+              <p class="text-sm text-dark-2 mt-1">结合自定义规则和AI识别结果</p>
+            </div>
+          </label>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">过滤精度设置</label>
+        <div class="space-y-2">
+          <input type="range" id="filter-precision" min="1" max="10" value="5" class="w-full h-2 bg-light-1 rounded-lg appearance-none cursor-pointer accent-primary">
+          <div class="flex justify-between text-xs text-dark-2">
+            <span>高速度</span>
+            <span>平衡</span>
+            <span>高精度</span>
+          </div>
+          <p class="text-sm text-dark-2">当前设置: <span id="precision-value">平衡模式</span></p>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">流量类型过滤</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="flex items-center">
+            <input type="checkbox" name="traffic-types" value="http" class="mr-2 accent-primary" checked>
+            <span>HTTP流量过滤</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="traffic-types" value="dns" class="mr-2 accent-primary" checked>
+            <span>DNS流量过滤</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="traffic-types" value="video" class="mr-2 accent-primary" checked>
+            <span>视频流过滤</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="traffic-types" value="other" class="mr-2 accent-primary">
+            <span>其他流量过滤</span>
+          </label>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">告警通知设置</label>
+        <div class="space-y-3">
+          <label class="flex items-center">
+            <input type="checkbox" name="notifications" value="filter-error" class="mr-2 accent-primary" checked>
+            <span>白流量过滤异常时通知</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="notifications" value="false-positive" class="mr-2 accent-primary" checked>
+            <span>误拦正常流量时通知</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="notifications" value="performance" class="mr-2 accent-primary" checked>
+            <span>系统性能下降时通知</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="notifications" value="daily-report" class="mr-2 accent-primary">
+            <span>每日流量统计报告</span>
+          </label>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">数据保留设置</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="traffic-retention" class="block text-xs text-dark-2 mb-1">流量数据保留天数</label>
+            <select id="traffic-retention" class="form-input">
+              <option value="7">7天</option>
+              <option value="30" selected>30天</option>
+              <option value="90">90天</option>
+              <option value="365">1年</option>
+            </select>
+          </div>
+          <div>
+            <label for="log-retention" class="block text-xs text-dark-2 mb-1">系统日志保留天数</label>
+            <select id="log-retention" class="form-input">
+              <option value="7">7天</option>
+              <option value="30">30天</option>
+              <option value="90" selected>90天</option>
+              <option value="365">1年</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h3 class="font-bold mb-4">AI模型设置</h3>
+    
+    <div class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">当前模型版本</label>
+        <div class="p-3 bg-light-1 rounded-lg">
+          <p class="font-medium">V2.3.5 - 稳定版</p>
+          <p class="text-xs text-dark-2 mt-1">上次更新: <span id="last-update-time">未更新</span></p>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">模型更新策略</label>
+        <select id="update-strategy" class="form-input">
+          <option value="auto-stable" selected>自动更新稳定版</option>
+          <option value="manual">手动更新</option>
+          <option value="auto-beta">自动更新测试版</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">模型性能设置</label>
+        <select id="performance-mode" class="form-input">
+          <option value="balanced" selected>平衡模式</option>
+          <option value="performance">高性能模式</option>
+          <option value="power-save">节能模式</option>
+        </select>
+        <p class="text-xs text-dark-2 mt-1">高性能模式将消耗更多系统资源</p>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-dark-2 mb-2">模型训练设置</label>
+        <div class="space-y-3">
+          <label class="flex items-center">
+            <input type="checkbox" id="auto-retrain" class="mr-2 accent-primary" checked>
+            <span>自动重训练模型</span>
+          </label>
+          <div class="ml-6">
+            <label for="retrain-threshold" class="block text-xs text-dark-2 mb-1">重训练阈值（准确率低于）</label>
+            <select id="retrain-threshold" class="form-input">
+              <option value="0.85">85%</option>
+              <option value="0.90" selected>90%</option>
+              <option value="0.95">95%</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="space-y-2">
+        <button id="check-update" class="btn btn-outline w-full justify-center">
+          <i class="fa fa-refresh"></i> 检查更新
+        </button>
+        
+        <button id="retrain-model" class="btn btn-outline w-full justify-center">
+          <i class="fa fa-cogs"></i> 手动重训练
+        </button>
+        
+        <button id="model-history" class="btn btn-outline w-full justify-center">
+          <i class="fa fa-history"></i> 模型历史版本
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 系统信息卡片 -->
+<div class="card mt-6">
+  <h3 class="font-bold mb-4">系统信息</h3>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="text-center">
+      <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2">
+        <i class="fa fa-server"></i>
+      </div>
+      <p class="text-sm text-dark-2">系统版本</p>
+      <p class="font-medium">v1.2.3</p>
+    </div>
+    
+    <div class="text-center">
+      <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center text-success mx-auto mb-2">
+        <i class="fa fa-clock-o"></i>
+      </div>
+      <p class="text-sm text-dark-2">运行时间</p>
+      <p class="font-medium" id="uptime">--</p>
+    </div>
+    
+    <div class="text-center">
+      <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning mx-auto mb-2">
+        <i class="fa fa-memory"></i>
+      </div>
+      <p class="text-sm text-dark-2">内存使用</p>
+      <p class="font-medium">2.1GB / 8GB</p>
+    </div>
+    
+    <div class="text-center">
+      <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mx-auto mb-2">
+        <i class="fa fa-hdd-o"></i>
+      </div>
+      <p class="text-sm text-dark-2">磁盘使用</p>
+      <p class="font-medium">45.2GB / 100GB</p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 加载保存的设置
+  const savedSettings = JSON.parse(localStorage.getItem('systemSettings') || '{}');
+  
+  const saveSettingsBtn = document.getElementById('save-settings');
+  const checkUpdateBtn = document.getElementById('check-update');
+  const retrainModelBtn = document.getElementById('retrain-model');
+  const modelHistoryBtn = document.getElementById('model-history');
+  const filterPrecisionSlider = document.getElementById('filter-precision');
+  const precisionValueSpan = document.getElementById('precision-value');
+  const filterModeOptions = document.querySelectorAll('.filter-mode-option');
+  
+  // 精度滑块更新
+  function updatePrecisionValue() {
+    const value = parseInt(filterPrecisionSlider.value);
+    let mode = '平衡模式';
+    
+    if (value <= 3) mode = '高速度模式';
+    else if (value >= 8) mode = '高精度模式';
+    
+    precisionValueSpan.textContent = mode;
+  }
+  
+  filterPrecisionSlider.addEventListener('input', updatePrecisionValue);
+  
+  // 过滤模式选择高亮
+  filterModeOptions.forEach(option => {
+    const radio = option.querySelector('input[type="radio"]');
+    
+    radio.addEventListener('change', function() {
+      filterModeOptions.forEach(opt => {
+        opt.classList.remove('border-primary', 'bg-primary/5');
+        opt.classList.add('border-light-2');
+      });
+      
+      if (this.checked) {
+        option.classList.remove('border-light-2');
+        option.classList.add('border-primary', 'bg-primary/5');
+      }
+    });
+    
+    // 初始化选中状态
+    if (radio.checked) {
+      option.classList.remove('border-light-2');
+      option.classList.add('border-primary', 'bg-primary/5');
+    }
+  });
+  
+  // 保存设置
+  saveSettingsBtn.addEventListener('click', function() {
+    const settings = {
+      filterMode: document.querySelector('input[name="filter-mode"]:checked').value,
+      filterPrecision: filterPrecisionSlider.value,
+      trafficTypes: Array.from(document.querySelectorAll('input[name="traffic-types"]:checked')).map(cb => cb.value),
+      notifications: Array.from(document.querySelectorAll('input[name="notifications"]:checked')).map(cb => cb.value),
+      trafficRetention: document.getElementById('traffic-retention').value,
+      logRetention: document.getElementById('log-retention').value,
+      updateStrategy: document.getElementById('update-strategy').value,
+      performanceMode: document.getElementById('performance-mode').value,
+      autoRetrain: document.getElementById('auto-retrain').checked,
+      retrainThreshold: document.getElementById('retrain-threshold').value,
+      lastSaved: new Date().toLocaleString()
+    };
+    
+    localStorage.setItem('systemSettings', JSON.stringify(settings));
+    showToast('系统设置保存成功');
+    
+    // 模拟应用设置
+    setTimeout(() => {
+      showToast('设置已生效，系统正在重新配置...');
+    }, 1000);
+  });
+  
+  // 检查更新
+  checkUpdateBtn.addEventListener('click', function() {
+    setLoading(checkUpdateBtn, true);
+    showToast('正在检查更新...');
+    
+    setTimeout(() => {
+      setLoading(checkUpdateBtn, false);
+      const hasUpdate = Math.random() > 0.7; // 30%概率有更新
+      
+      if (hasUpdate) {
+        showToast('发现新版本 V2.4.0，是否立即更新？');
+        // 这里可以添加更新确认对话框
+      } else {
+        showToast('当前已是最新版本');
+        document.getElementById('last-update-time').textContent = new Date().toLocaleString();
+      }
+    }, 2000);
+  });
+  
+  // 重训练模型
+  retrainModelBtn.addEventListener('click', function() {
+    if (confirm('模型重训练将消耗较长时间，确定要开始吗？')) {
+      setLoading(retrainModelBtn, true);
+      showToast('模型重训练已开始，请耐心等待...');
+      
+      setTimeout(() => {
+        setLoading(retrainModelBtn, false);
+        showToast('模型重训练完成，准确率提升至 96.8%');
+      }, 5000);
+    }
+  });
+  
+  // 模型历史版本
+  modelHistoryBtn.addEventListener('click', function() {
+    showToast('模型历史版本功能开发中...');
+  });
+  
+  // 更新系统运行时间
+  function updateUptime() {
+    const startTime = localStorage.getItem('systemStartTime') || Date.now();
+    const uptime = Date.now() - startTime;
+    const hours = Math.floor(uptime / (1000 * 60 * 60));
+    const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
+    
+    document.getElementById('uptime').textContent = `${hours}小时${minutes}分钟`;
+  }
+  
+  // 如果没有启动时间记录，设置一个
+  if (!localStorage.getItem('systemStartTime')) {
+    localStorage.setItem('systemStartTime', Date.now());
+  }
+  
+  // 加载保存的设置
+  function loadSettings() {
+    if (savedSettings.filterMode) {
+      document.querySelector(`input[name="filter-mode"][value="${savedSettings.filterMode}"]`).checked = true;
+    }
+    
+    if (savedSettings.filterPrecision) {
+      filterPrecisionSlider.value = savedSettings.filterPrecision;
+      updatePrecisionValue();
+    }
+    
+    if (savedSettings.trafficTypes) {
+      document.querySelectorAll('input[name="traffic-types"]').forEach(cb => {
+        cb.checked = savedSettings.trafficTypes.includes(cb.value);
+      });
+    }
+    
+    if (savedSettings.notifications) {
+      document.querySelectorAll('input[name="notifications"]').forEach(cb => {
+        cb.checked = savedSettings.notifications.includes(cb.value);
+      });
+    }
+    
+    if (savedSettings.trafficRetention) {
+      document.getElementById('traffic-retention').value = savedSettings.trafficRetention;
+    }
+    
+    if (savedSettings.logRetention) {
+      document.getElementById('log-retention').value = savedSettings.logRetention;
+    }
+    
+    if (savedSettings.updateStrategy) {
+      document.getElementById('update-strategy').value = savedSettings.updateStrategy;
+    }
+    
+    if (savedSettings.performanceMode) {
+      document.getElementById('performance-mode').value = savedSettings.performanceMode;
+    }
+    
+    if (savedSettings.autoRetrain !== undefined) {
+      document.getElementById('auto-retrain').checked = savedSettings.autoRetrain;
+    }
+    
+    if (savedSettings.retrainThreshold) {
+      document.getElementById('retrain-threshold').value = savedSettings.retrainThreshold;
+    }
+  }
+  
+  // 初始化
+  loadSettings();
+  updateUptime();
+  updatePrecisionValue();
+  
+  // 每分钟更新运行时间
+  setInterval(updateUptime, 60000);
+  
+  // 触发过滤模式选择高亮
+  const checkedRadio = document.querySelector('input[name="filter-mode"]:checked');
+  if (checkedRadio) {
+    checkedRadio.dispatchEvent(new Event('change'));
+  }
+});
+</script>
+{% endblock %}

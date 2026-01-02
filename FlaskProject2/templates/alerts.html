@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}告警中心{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="alerts-header">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">告警中心</h2>
+  <div class="alerts-filters">
+    <div class="relative">
+      <select id="alert-type-filter" class="form-input pr-8 appearance-none">
+        <option value="">全部告警类型</option>
+        <option value="danger">危险告警</option>
+        <option value="warning">警告告警</option>
+        <option value="info">信息告警</option>
+      </select>
+      <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-dark-2 pointer-events-none"></i>
+    </div>
+    <div class="relative">
+      <select id="alert-status-filter" class="form-input pr-8 appearance-none">
+        <option value="">全部状态</option>
+        <option value="pending">未处理</option>
+        <option value="processing">处理中</option>
+        <option value="resolved">已解决</option>
+      </select>
+      <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-dark-2 pointer-events-none"></i>
+    </div>
+    <button id="refresh-alerts" class="btn btn-primary">
+      <i class="fa fa-refresh"></i> 刷新告警
+    </button>
+  </div>
+</div>
+
+<!-- 告警统计 -->
+<div class="alerts-stats">
+  <div class="alert-stat-card">
+    <div>
+      <p class="text-dark-2 text-sm">未处理告警</p>
+      <h3 class="text-2xl font-bold mt-1" id="pending-alerts">0</h3>
+    </div>
+    <div class="alert-stat-icon danger">
+      <i class="fa fa-exclamation-circle"></i>
+    </div>
+  </div>
+  
+  <div class="alert-stat-card">
+    <div>
+      <p class="text-dark-2 text-sm">处理中告警</p>
+      <h3 class="text-2xl font-bold mt-1" id="processing-alerts">0</h3>
+    </div>
+    <div class="alert-stat-icon warning">
+      <i class="fa fa-spinner"></i>
+    </div>
+  </div>
+  
+  <div class="alert-stat-card">
+    <div>
+      <p class="text-dark-2 text-sm">已解决告警</p>
+      <h3 class="text-2xl font-bold mt-1" id="resolved-alerts">0</h3>
+    </div>
+    <div class="alert-stat-icon success">
+      <i class="fa fa-check-circle"></i>
+    </div>
+  </div>
+  
+  <div class="alert-stat-card">
+    <div>
+      <p class="text-dark-2 text-sm">今日新增</p>
+      <h3 class="text-2xl font-bold mt-1" id="today-alerts">0</h3>
+    </div>
+    <div class="alert-stat-icon primary">
+      <i class="fa fa-plus-circle"></i>
+    </div>
+  </div>
+</div>
+
+<!-- 告警列表 -->
+<div class="card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">告警详情</h3>
+    <div class="flex gap-2">
+      <div class="relative">
+        <input type="text" id="search-alerts" placeholder="搜索告警..." class="form-input pl-10">
+        <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-dark-2"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div id="alerts-container">
+    <div class="empty-state" id="empty-alerts-state">
+      <i class="fa fa-bell-slash"></i>
+      <p>暂无告警记录</p>
+      <p class="text-sm mt-2">系统运行正常，无异常告警</p>
+    </div>
+  </div>
+</div>
+
+<!-- 告警详情模态框 -->
+<div id="alert-detail-modal" class="alert-modal hidden">
+  <div class="alert-modal-backdrop" id="alert-modal-backdrop"></div>
+  <div class="alert-modal-content" id="alert-modal-content">
+    <div class="alert-modal-header">
+      <h3 class="text-lg font-bold">告警详情</h3>
+      <button id="close-alert-modal" class="p-1 rounded-full hover:bg-light-1">
+        <i class="fa fa-times text-dark-2"></i>
+      </button>
+    </div>
+    
+    <div class="alert-modal-body" id="alert-detail-content">
+      <!-- 动态内容 -->
+    </div>
+    
+    <div class="alert-modal-footer">
+      <button id="mark-processing" class="btn btn-warning flex-1">
+        <i class="fa fa-spinner"></i> 标记为处理中
+      </button>
+      <button id="mark-resolved" class="btn btn-success flex-1">
+        <i class="fa fa-check"></i> 标记为已解决
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

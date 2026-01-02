@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}个人中心{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">个人中心</h2>
+  <p class="text-dark-2 mt-2">管理您的个人信息和账户设置</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- 个人信息卡片 -->
+  <div class="card lg:col-span-2">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-bold">个人信息</h3>
+      <button id="editProfileBtn" class="btn btn-outline text-sm">
+        <i class="fa fa-edit"></i> 编辑信息
+      </button>
+    </div>
+    
+    <form id="profileForm" class="space-y-4">
+      <div class="flex items-center space-x-4 mb-6">
+        <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden" id="avatarContainer">
+          {% if profile and profile.avatar %}
+            <img src="/{{ profile.avatar }}" alt="头像" class="w-full h-full object-cover">
+          {% else %}
+            <i class="fa fa-user text-2xl text-primary"></i>
+          {% endif %}
+        </div>
+        <div>
+          <input type="file" id="avatarInput" accept="image/*" class="hidden">
+          <button type="button" id="uploadAvatarBtn" class="btn btn-outline text-sm">
+            <i class="fa fa-camera"></i> 更换头像
+          </button>
+          <p class="text-xs text-dark-2 mt-1">支持 JPG、PNG 格式，文件大小不超过 5MB</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-2">用户名</label>
+          <input type="text" value="{{ current_user.username }}" disabled class="form-input bg-light-1 cursor-not-allowed">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">手机号码</label>
+          <input type="tel" name="phone" value="{{ profile.phone or '' }}" class="form-input" placeholder="请输入手机号码">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">部门</label>
+          <input type="text" name="department" value="{{ profile.department or '' }}" class="form-input" placeholder="请输入部门">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">职位</label>
+          <input type="text" name="position" value="{{ profile.position or '' }}" class="form-input" placeholder="请输入职位">
+        </div>
+      </div>
+      
+      <div class="flex justify-end space-x-3 pt-4">
+        <button type="button" id="cancelBtn" class="btn btn-outline">取消</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-save"></i> 保存更改
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- 统计信息卡片 -->
+  <div class="space-y-6">
+    <div class="card">
+      <h3 class="font-bold mb-4">使用统计</h3>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-dark-2">处理流量数</span>
+          <span class="font-bold">{{ stats.traffic_count }}</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-dark-2">创建规则数</span>
+          <span class="font-bold">{{ stats.rules_count }}</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-dark-2">告警处理数</span>
+          <span class="font-bold">{{ stats.alerts_count }}</span>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-dark-2">注册时间</span>
+          <span class="text-sm text-dark-2">{{ current_user.register_time.strftime('%Y-%m-%d') }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3 class="font-bold mb-4">账户安全</h3>
+      <p>暂无</p>
+      
+    </div>
+  </div>
+</div>
+
+<!-- 修改密码模态框 -->
+<div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold">修改密码</h3>
+      <button id="closePasswordModal" class="text-gray-400 hover:text-gray-600">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    
+    <form id="changePasswordForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-2">当前密码</label>
+        <input type="password" name="current_password" class="form-input w-full" placeholder="请输入当前密码" required>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium mb-2">新密码</label>
+        <input type="password" name="new_password" class="form-input w-full" placeholder="请输入新密码（至少6位）" required minlength="6">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium mb-2">确认新密码</label>
+        <input type="password" name="confirm_password" class="form-input w-full" placeholder="请再次输入新密码" required minlength="6">
+      </div>
+      
+      <div class="flex justify-end space-x-3 pt-4">
+        <button type="button" id="cancelPasswordBtn" class="btn btn-outline">取消</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-save"></i> 确认修改
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}

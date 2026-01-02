@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AI流量守卫者{% endblock %} - 智能白流量过滤平台</title>
+  
+  <!-- 外部资源引入 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#0FC6C2',
+            success: '#00B42A',
+            warning: '#FF7D00',
+            danger: '#F53F3F',
+            dark: '#1D2129',
+            'dark-2': '#4E5969',
+            'light-1': '#F2F3F5',
+            'light-2': '#E5E6EB',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  <!-- 页面级别的CSS -->
+  {% block extra_css %}{% endblock %}
+  
+  <!-- 页面级别的样式 -->
+  {% block head %}{% endblock %}
+</head>
+<body class="font-inter bg-gray-50 text-dark overflow-x-hidden">
+  <!-- 提示消息组件 -->
+  <div id="toast" class="toast bg-success text-white">
+    <i class="fa fa-check mr-2"></i> <span id="toast-message">操作成功</span>
+  </div>
+
+  {% if not current_user.is_authenticated %}
+    <!-- 登录/注册页面 -->
+    {% block auth_content %}{% endblock %}
+  {% else %}
+    <!-- 主应用界面 -->
+    <div id="app">
+      <!-- 顶部导航栏 -->
+      <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-30">
+        <div class="flex items-center justify-between px-6 h-16">
+          <div class="flex items-center gap-2">
+            <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-light-1 transition-colors">
+              <i class="fa fa-bars text-dark-2"></i>
+            </button>
+            <div class="flex items-center gap-2">
+              <i class="fa fa-shield text-xl text-primary"></i>
+              <h1 class="text-lg font-bold hidden sm:block">AI流量守卫者</h1>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <!-- 通知图标 -->
+            <div class="relative">
+              <button class="p-2 rounded-full hover:bg-light-1 relative transition-colors">
+                <i class="fa fa-bell text-dark-2"></i>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+              </button>
+            </div>
+            
+            <!-- 用户信息 -->
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-user"></i>
+              </div>
+              <span class="text-sm font-medium hidden sm:block">{{ current_user.username }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 侧边栏 -->
+      <aside id="sidebar" class="fixed top-16 left-0 bottom-0 w-64 bg-white shadow-sm z-20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-4">
+          <div class="relative">
+            <input type="text" placeholder="搜索功能..." class="form-input pl-10">
+            <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-dark-2"></i>
+          </div>
+        </div>
+        
+        <nav class="mt-4 px-2">
+          <p class="text-xs font-medium text-dark-2 uppercase px-4 mb-2">主要功能</p>
+        <ul class="space-y-1">
+          <li>
+            <a href="{{ url_for('main.dashboard') }}" class="sidebar-item {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+              <i class="fa fa-tachometer w-5 text-center"></i>
+              <span>仪表盘</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.file_drop') }}" class="sidebar-item {% if request.endpoint == 'main.file_drop' %}active{% endif %}">
+              <i class="fa fa-upload w-5 text-center"></i>
+              <span>文件拖放过滤</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.traffic_monitor') }}" class="sidebar-item {% if request.endpoint == 'main.traffic_monitor' %}active{% endif %}">
+              <i class="fa fa-exchange w-5 text-center"></i>
+              <span>流量监控</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.white_rules') }}" class="sidebar-item {% if request.endpoint == 'main.white_rules' %}active{% endif %}">
+              <i class="fa fa-filter w-5 text-center"></i>
+              <span>白流量规则</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.alerts') }}" class="sidebar-item {% if request.endpoint == 'main.alerts' %}active{% endif %}">
+              <i class="fa fa-bell w-5 text-center"></i>
+              <span>告警中心</span>
+            </a>
+          </li>
+        </ul>
+        
+        <p class="text-xs font-medium text-dark-2 uppercase px-4 mb-2 mt-6">系统设置</p>
+        <ul class="space-y-1">
+          <li>
+            <a href="{{ url_for('main.settings') }}" class="sidebar-item {% if request.endpoint == 'main.settings' %}active{% endif %}">
+              <i class="fa fa-cog w-5 text-center"></i>
+              <span>系统设置</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.profile') }}" class="sidebar-item {% if request.endpoint == 'main.profile' %}active{% endif %}">
+              <i class="fa fa-user w-5 text-center"></i>
+              <span>个人中心</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('main.help') }}" class="sidebar-item {% if request.endpoint == 'main.help' %}active{% endif %}">
+              <i class="fa fa-question-circle w-5 text-center"></i>
+              <span>帮助中心</span>
+            </a>
+          </li>
+        </ul>
+        </nav>
+        
+        <div class="absolute bottom-4 left-0 right-0 px-4">
+          <a href="{{ url_for('auth.logout') }}" class="w-full btn btn-outline justify-center">
+            <i class="fa fa-sign-out"></i> 退出登录
+          </a>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <main class="pt-16 lg:pl-64 min-h-screen pb-20">
+        <div class="p-6">
+          <!-- 消息提示 -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-success/10 text-success border border-success/20{% elif category == 'danger' %}bg-danger/10 text-danger border border-danger/20{% elif category == 'info' %}bg-primary/10 text-primary border border-primary/20{% else %}bg-warning/10 text-warning border border-warning/20{% endif %}">
+                  <i class="fa {% if category == 'success' %}fa-check-circle{% elif category == 'danger' %}fa-exclamation-circle{% elif category == 'info' %}fa-info-circle{% else %}fa-exclamation-triangle{% endif %} mr-2"></i>
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <!-- 页面内容 -->
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+    </div>
+  {% endif %}
+
+  <!-- JavaScript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  
+  <!-- 页面级别的JavaScript -->
+  {% block extra_js %}{% endblock %}
+  
+  {% block scripts %}{% endblock %}
+</body>
+</html>

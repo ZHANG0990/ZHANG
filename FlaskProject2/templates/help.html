@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+
+{% block title %}帮助中心{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">帮助中心</h2>
+  <p class="text-dark-2 mt-2">了解如何使用AI流量守卫者的各项功能</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="card lg:col-span-1">
+    <h3 class="font-bold mb-4">帮助目录</h3>
+    
+    <div class="space-y-1">
+      <button class="w-full text-left sidebar-item justify-start active help-nav-item" data-section="basic">
+        <i class="fa fa-question-circle w-5 text-center"></i>
+        <span>基础介绍</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="file-drop">
+        <i class="fa fa-upload w-5 text-center"></i>
+        <span>文件拖放过滤</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="white-rules">
+        <i class="fa fa-filter w-5 text-center"></i>
+        <span>白流量规则</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="settings">
+        <i class="fa fa-cog w-5 text-center"></i>
+        <span>系统设置</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="analysis">
+        <i class="fa fa-line-chart w-5 text-center"></i>
+        <span>数据分析</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="alerts">
+        <i class="fa fa-bell w-5 text-center"></i>
+        <span>告警处理</span>
+      </button>
+      <button class="w-full text-left sidebar-item justify-start help-nav-item" data-section="faq">
+        <i class="fa fa-exclamation-triangle w-5 text-center"></i>
+        <span>常见问题</span>
+      </button>
+    </div>
+    
+    <div class="mt-6 p-4 bg-primary/5 rounded-lg">
+      <h4 class="font-medium text-primary mb-2">需要更多帮助？</h4>
+      <p class="text-sm text-dark-2 mb-3">如果您在使用过程中遇到问题，可以联系我们的技术支持团队。</p>
+      <button class="btn btn-primary w-full text-sm">
+        <i class="fa fa-phone"></i> 联系技术支持
+      </button>
+    </div>
+  </div>
+  
+  <div class="card lg:col-span-2">
+    <div id="help-content">
+      <!-- 基础介绍 -->
+      <div id="basic-section" class="help-section">
+        <h3 class="font-bold mb-4">AI流量守卫者基础介绍</h3>
+        
+        <div class="prose max-w-none">
+          <p class="text-dark-2 mb-4">
+            AI流量守卫者是一款基于人工智能技术的流量安全管理平台，能够自动识别并过滤正常流量（白流量），
+            让您专注于真正的威胁检测工作。平台采用先进的机器学习算法，能够不断优化识别精度，降低误判率。
+          </p>
+          
+          <h4 class="font-bold text-lg mt-6 mb-3">核心功能</h4>
+          
+          <ul class="list-disc pl-5 space-y-2 text-dark-2 mb-6">
+            <li><strong>智能流量识别</strong> - 基于AI模型自动识别正常流量与异常流量</li>
+            <li><strong>自定义规则管理</strong> - 支持创建、编辑和管理白流量规则</li>
+            <li><strong>实时流量监控</strong> - 实时展示系统流量状态与数据分析</li>
+            <li><strong>智能告警系统</strong> - 异常情况及时提醒，确保问题快速处理</li>
+          </ul>
+          
+          <h4 class="font-bold text-lg mt-6 mb-3">快速开始</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="p-4 border border-light-2 rounded-lg">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span class="text-sm font-bold">1</span>
+                </div>
+                <h5 class="font-medium">上传流量数据</h5>
+              </div>
+              <p class="text-sm text-dark-2">通过文件拖放功能上传您的流量数据文件</p>
+            </div>
+            
+            <div class="p-4 border border-light-2 rounded-lg">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span class="text-sm font-bold">2</span>
+                </div>
+                <h5 class="font-medium">AI智能分析</h5>
+              </div>
+              <p class="text-sm text-dark-2">系统自动使用AI模型分析流量特征</p>
+            </div>
+            
+            <div class="p-4 border border-light-2 rounded-lg">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span class="text-sm font-bold">3</span>
+                </div>
+                <h5 class="font-medium">查看分析结果</h5>
+              </div>
+              <p class="text-sm text-dark-2">在仪表盘中查看详细的分析结果和统计数据</p>
+            </div>
+            
+            <div class="p-4 border border-light-2 rounded-lg">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span class="text-sm font-bold">4</span>
+                </div>
+                <h5 class="font-medium">配置规则</h5>
+              </div>
+              <p class="text-sm text-dark-2">根据需要创建自定义的白流量过滤规则</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 文件拖放过滤 -->
+      <div id="file-drop-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">文件拖放过滤使用指南</h3>
+        
+        <div class="prose max-w-none">
+          <h4 class="font-bold text-lg mb-3">功能概述</h4>
+          <p class="text-dark-2 mb-4">
+            文件拖放过滤功能允许您通过简单的拖放操作上传流量数据文件，系统会自动使用AI模型进行分析，
+            识别出白流量和可疑流量，帮助您快速了解网络流量状况。
+          </p>
+          
+          <h4 class="font-bold text-lg mb-3">支持的文件格式</h4>
+          <ul class="list-disc pl-5 space-y-1 text-dark-2 mb-4">
+            <li>CSV文件 (.csv) - 推荐格式</li>
+            <li>Excel文件 (.xlsx, .xls)</li>
+            <li>文本文件 (.txt)</li>
+            <li>JSON文件 (.json)</li>
+          </ul>
+          
+          <h4 class="font-bold text-lg mb-3">数据格式要求</h4>
+          <p class="text-dark-2 mb-2">上传的文件应包含以下字段：</p>
+          <div class="overflow-x-auto mb-4">
+            <table class="min-w-full border border-light-2 rounded-lg">
+              <thead class="bg-light-1">
+                <tr>
+                  <th class="px-4 py-2 text-left">字段名</th>
+                  <th class="px-4 py-2 text-left">说明</th>
+                  <th class="px-4 py-2 text-left">示例</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <tr class="border-t border-light-2">
+                  <td class="px-4 py-2 font-mono">source_ip</td>
+                  <td class="px-4 py-2">源IP地址</td>
+                  <td class="px-4 py-2">192.168.1.100</td>
+                </tr>
+                <tr class="border-t border-light-2">
+                  <td class="px-4 py-2 font-mono">dest_ip</td>
+                  <td class="px-4 py-2">目标IP地址</td>
+                  <td class="px-4 py-2">8.8.8.8</td>
+                </tr>
+                <tr class="border-t border-light-2">
+                  <td class="px-4 py-2 font-mono">traffic_type</td>
+                  <td class="px-4 py-2">流量类型</td>
+                  <td class="px-4 py-2">HTTP</td>
+                </tr>
+                <tr class="border-t border-light-2">
+                  <td class="px-4 py-2 font-mono">content</td>
+                  <td class="px-4 py-2">请求内容</td>
+                  <td class="px-4 py-2">GET /api/data</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <h4 class="font-bold text-lg mb-3">操作步骤</h4>
+          <ol class="list-decimal pl-5 space-y-2 text-dark-2 mb-4">
+            <li>进入"文件拖放过滤"页面</li>
+            <li>将文件拖拽到指定区域，或点击"选择文件"按钮</li>
+            <li>确认文件信息无误后，点击"AI分析"按钮</li>
+            <li>等待系统完成分析，查看结果</li>
+          </ol>
+        </div>
+      </div>
+      
+      <!-- 白流量规则 -->
+      <div id="white-rules-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">白流量规则管理</h3>
+        
+        <div class="prose max-w-none">
+          <h4 class="font-bold text-lg mb-3">什么是白流量规则</h4>
+          <p class="text-dark-2 mb-4">
+            白流量规则是用于定义正常、安全流量特征的规则集合。通过配置这些规则，
+            系统可以自动识别符合条件的流量为白流量，减少误报并提高检测效率。
+          </p>
+          
+          <h4 class="font-bold text-lg mb-3">规则类型</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">IP地址规则</h5>
+              <p class="text-sm text-dark-2">基于源IP或目标IP地址进行匹配</p>
+              <p class="text-xs text-dark-2 mt-1">示例: 192.168.1.0/24</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">域名规则</h5>
+              <p class="text-sm text-dark-2">基于域名进行匹配，支持通配符</p>
+              <p class="text-xs text-dark-2 mt-1">示例: *.example.com</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">端口规则</h5>
+              <p class="text-sm text-dark-2">基于端口号进行匹配</p>
+              <p class="text-xs text-dark-2 mt-1">示例: 80, 443</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">协议规则</h5>
+              <p class="text-sm text-dark-2">基于网络协议进行匹配</p>
+              <p class="text-xs text-dark-2 mt-1">示例: TCP, UDP</p>
+            </div>
+          </div>
+          
+          <h4 class="font-bold text-lg mb-3">创建规则</h4>
+          <ol class="list-decimal pl-5 space-y-2 text-dark-2 mb-4">
+            <li>进入"白流量规则管理"页面</li>
+            <li>点击"新增规则"按钮</li>
+            <li>填写规则名称和描述</li>
+            <li>选择流量类型和匹配条件</li>
+            <li>设置规则状态（启用/停用）</li>
+            <li>保存规则</li>
+          </ol>
+        </div>
+      </div>
+      
+      <!-- 系统设置 -->
+      <div id="settings-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">系统设置说明</h3>
+        
+        <div class="prose max-w-none">
+          <h4 class="font-bold text-lg mb-3">过滤设置</h4>
+          <div class="space-y-3 mb-4">
+            <div class="p-3 bg-light-1 rounded-lg">
+              <h5 class="font-medium mb-1">过滤模式</h5>
+              <p class="text-sm text-dark-2">选择AI自动识别或规则+AI混合模式</p>
+            </div>
+            <div class="p-3 bg-light-1 rounded-lg">
+              <h5 class="font-medium mb-1">过滤精度</h5>
+              <p class="text-sm text-dark-2">调整系统在速度和精度之间的平衡</p>
+            </div>
+            <div class="p-3 bg-light-1 rounded-lg">
+              <h5 class="font-medium mb-1">流量类型</h5>
+              <p class="text-sm text-dark-2">选择需要过滤的流量类型</p>
+            </div>
+          </div>
+          
+          <h4 class="font-bold text-lg mb-3">AI模型设置</h4>
+          <div class="space-y-3 mb-4">
+            <div class="p-3 bg-light-1 rounded-lg">
+              <h5 class="font-medium mb-1">更新策略</h5>
+              <p class="text-sm text-dark-2">配置模型的自动更新策略</p>
+            </div>
+            <div class="p-3 bg-light-1 rounded-lg">
+              <h5 class="font-medium mb-1">性能模式</h5>
+              <p class="text-sm text-dark-2">选择适合的性能模式</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 数据分析 -->
+      <div id="analysis-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">数据分析功能</h3>
+        
+        <div class="prose max-w-none">
+          <h4 class="font-bold text-lg mb-3">仪表盘概览</h4>
+          <p class="text-dark-2 mb-4">
+            仪表盘提供了系统运行状态的全面概览，包括流量统计、AI分析结果、
+            系统性能指标等关键信息。
+          </p>
+          
+          <h4 class="font-bold text-lg mb-3">关键指标说明</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">总流量</h5>
+              <p class="text-sm text-dark-2">系统处理的流量总数</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">白流量占比</h5>
+              <p class="text-sm text-dark-2">被识别为正常流量的比例</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">可疑流量</h5>
+              <p class="text-sm text-dark-2">需要进一步审查的流量数量</p>
+            </div>
+            <div class="p-3 border border-light-2 rounded-lg">
+              <h5 class="font-medium mb-2">AI准确率</h5>
+              <p class="text-sm text-dark-2">AI模型的识别准确率</p>
+            </div>
+          </div>
+          
+          <h4 class="font-bold text-lg mb-3">图表分析</h4>
+          <ul class="list-disc pl-5 space-y-2 text-dark-2 mb-4">
+            <li><strong>流量趋势图</strong> - 显示一段时间内的流量变化趋势</li>
+            <li><strong>流量类型分布</strong> - 展示不同类型流量的占比</li>
+            <li><strong>实时监控图</strong> - 实时显示当前流量状态</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 告警处理 -->
+      <div id="alerts-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">告警处理指南</h3>
+        
+        <div class="prose max-w-none">
+          <h4 class="font-bold text-lg mb-3">告警类型</h4>
+          <div class="space-y-3 mb-4">
+            <div class="p-3 border-l-4 border-danger bg-danger/5 rounded-r-lg">
+              <h5 class="font-medium text-danger mb-1">白流量误拦</h5>
+              <p class="text-sm text-dark-2">正常流量被错误识别为可疑流量</p>
+            </div>
+            <div class="p-3 border-l-4 border-warning bg-warning/5 rounded-r-lg">
+              <h5 class="font-medium text-warning mb-1">过滤异常</h5>
+              <p class="text-sm text-dark-2">流量过滤过程中出现异常</p>
+            </div>
+            <div class="p-3 border-l-4 border-primary bg-primary/5 rounded-r-lg">
+              <h5 class="font-medium text-primary mb-1">模型更新失败</h5>
+              <p class="text-sm text-dark-2">AI模型更新过程失败</p>
+            </div>
+          </div>
+          
+          <h4 class="font-bold text-lg mb-3">处理流程</h4>
+          <ol class="list-decimal pl-5 space-y-2 text-dark-2 mb-4">
+            <li>查看告警详情，了解问题具体情况</li>
+            <li>分析告警原因，确定处理方案</li>
+            <li>执行相应的修复操作</li>
+            <li>验证问题是否已解决</li>
+            <li>更新告警状态为"已解决"</li>
+          </ol>
+        </div>
+      </div>
+      
+      <!-- 常见问题 -->
+      <div id="faq-section" class="help-section hidden">
+        <h3 class="font-bold mb-4">常见问题解答</h3>
+        
+        <div class="space-y-4">
+          <div class="border border-light-2 rounded-lg">
+            <button class="w-full p-4 text-left flex items-center justify-between faq-toggle" data-target="faq-1">
+              <span class="font-medium">如何提高AI识别的准确率？</span>
+              <i class="fa fa-chevron-down transition-transform"></i>
+            </button>
+            <div id="faq-1" class="faq-content hidden p-4 border-t border-light-2 bg-light-1">
+              <p class="text-dark-2">
+                1. 提供更多高质量的训练数据<br>
+                2. 定期更新AI模型<br>
+                3. 根据实际情况调整过滤规则<br>
+                4. 及时反馈误判情况，帮助模型学习
+              </p>
+            </div>
+          </div>
+          
+          <div class="border border-light-2 rounded-lg">
+            <button class="w-full p-4 text-left flex items-center justify-between faq-toggle" data-target="faq-2">
+              <span class="font-medium">系统支持哪些数据格式？</span>
+              <i class="fa fa-chevron-down transition-transform"></i>
+            </button>
+            <div id="faq-2" class="faq-content hidden p-4 border-t border-light-2 bg-light-1">
+              <p class="text-dark-2">
+                系统支持多种常见的数据格式：<br>
+                • CSV文件 (.csv) - 推荐格式<br>
+                • Excel文件 (.xlsx, .xls)<br>
+                • 文本文件 (.txt)<br>
+                • JSON文件 (.json)
+              </p>
+            </div>
+          </div>
+          
+          <div class="border border-light-2 rounded-lg">
+            <button class="w-full p-4 text-left flex items-center justify-between faq-toggle" data-target="faq-3">
+              <span class="font-medium">如何处理大量流量数据？</span>
+              <i class="fa fa-chevron-down transition-transform"></i>
+            </button>
+            <div id="faq-3" class="faq-content hidden p-4 border-t border-light-2 bg-light-1">
+              <p class="text-dark-2">
+                对于大量流量数据的处理建议：<br>
+                1. 分批上传数据文件<br>
+                2. 使用高性能模式<br>
+                3. 合理设置数据保留期限<br>
+                4. 定期清理历史数据
+              </p>
+            </div>
+          </div>
+          
+          <div class="border border-light-2 rounded-lg">
+            <button class="w-full p-4 text-left flex items-center justify-between faq-toggle" data-target="faq-4">
+              <span class="font-medium">系统出现异常如何处理？</span>
+              <i class="fa fa-chevron-down transition-transform"></i>
+            </button>
+            <div id="faq-4" class="faq-content hidden p-4 border-t border-light-2 bg-light-1">
+              <p class="text-dark-2">
+                遇到系统异常时的处理步骤：<br>
+                1. 查看告警中心的详细信息<br>
+                2. 检查系统日志<br>
+                3. 尝试重启相关服务<br>
+                4. 如问题持续，请联系技术支持
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const helpNavItems = document.querySelectorAll('.help-nav-item');
+  const helpSections = document.querySelectorAll('.help-section');
+  const faqToggles = document.querySelectorAll('.faq-toggle');
+  
+  // 帮助导航切换
+  helpNavItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const sectionId = this.getAttribute('data-section');
+      
+      // 更新导航状态
+      helpNavItems.forEach(nav => nav.classList.remove('active'));
+      this.classList.add('active');
+      
+      // 显示对应内容
+      helpSections.forEach(section => section.classList.add('hidden'));
+      document.getElementById(sectionId + '-section').classList.remove('hidden');
+    });
+  });
+  
+  // FAQ折叠展开
+  faqToggles.forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-target');
+      const content = document.getElementById(targetId);
+      const icon = this.querySelector('i');
+      
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    });
+  });
+});
+</script>
+{% endblock %}

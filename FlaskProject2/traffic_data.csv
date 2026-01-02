@@ -1,0 +1,101 @@
+源IP,目标IP,流量类型,是否在白名单,应用的规则,检测时间,用户代理,URL
+70.226.158.209,192.168.1.1,视频流量,True,,2025-08-16 07:31:02,Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.01; Trident/4.1),app
+148.49.204.51,192.168.1.1,恶意流量,True,规则1,2025-08-15 12:12:02,Opera/8.82.(Windows NT 6.1; sv-SE) Presto/2.9.188 Version/12.00,category
+223.112.13.93,192.168.1.1,视频流量,True,,2025-08-15 13:01:02,"Mozilla/5.0 (iPhone; CPU iPhone OS 11_4_1 like Mac OS X) AppleWebKit/534.1 (KHTML, like Gecko) FxiOS/18.7r2023.0 Mobile/23T821 Safari/534.1",app
+123.181.76.250,192.168.1.1,HTTP,True,规则1,2025-08-16 09:35:02,Opera/8.92.(X11; Linux x86_64; ast-ES) Presto/2.9.165 Version/10.00,app
+84.233.16.200,192.168.1.1,恶意流量,True,规则2,2025-08-15 11:59:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 3_3 like Mac OS X; zu-ZA) AppleWebKit/535.17.6 (KHTML, like Gecko) Version/3.0.5 Mobile/8B111 Safari/6535.17.6",wp-content
+157.234.65.15,192.168.1.1,HTTP,False,规则2,2025-08-15 23:15:02,"Mozilla/5.0 (Windows NT 4.0) AppleWebKit/535.0 (KHTML, like Gecko) Chrome/43.0.861.0 Safari/535.0",wp-content/app
+30.141.200.4,192.168.1.1,视频流量,True,规则2,2025-08-15 21:04:02,Mozilla/5.0 (Windows NT 5.01; ha-NG; rv:1.9.2.20) Gecko/4705-04-04 06:01:09 Firefox/3.8,categories/wp-content/wp-content
+121.43.170.132,192.168.1.1,DNS,True,规则1,2025-08-15 23:50:02,"Mozilla/5.0 (Windows; U; Windows NT 5.0) AppleWebKit/532.18.6 (KHTML, like Gecko) Version/4.0.2 Safari/532.18.6",blog/app
+146.100.226.235,192.168.1.1,HTTP,False,,2025-08-15 21:28:02,Opera/8.38.(X11; Linux i686; pl-PL) Presto/2.9.182 Version/11.00,tag/tag/categories
+18.67.243.64,192.168.1.1,HTTPS,True,,2025-08-15 21:22:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 3_1 like Mac OS X; li-BE) AppleWebKit/534.34.6 (KHTML, like Gecko) Version/4.0.5 Mobile/8B113 Safari/6534.34.6",app/category/explore
+188.24.222.148,192.168.1.1,HTTPS,True,规则2,2025-08-16 04:35:02,Mozilla/5.0 (Windows NT 6.0; kw-GB; rv:1.9.1.20) Gecko/7119-12-21 04:55:08 Firefox/3.6.3,main/tags
+121.159.180.254,192.168.1.1,恶意流量,True,规则1,2025-08-16 02:03:02,"Mozilla/5.0 (Windows NT 5.2) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/37.0.811.0 Safari/535.2",main/wp-content/search
+153.219.2.19,192.168.1.1,恶意流量,False,规则2,2025-08-16 04:26:02,Opera/8.92.(X11; Linux i686; da-DK) Presto/2.9.184 Version/12.00,categories/tags
+123.250.26.25,192.168.1.1,HTTPS,True,规则2,2025-08-15 22:46:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_1 like Mac OS X; th-TH) AppleWebKit/535.19.2 (KHTML, like Gecko) Version/3.0.5 Mobile/8B118 Safari/6535.19.2",categories/search
+211.90.45.223,192.168.1.1,恶意流量,True,,2025-08-15 20:03:02,Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 5.0; Trident/3.0),main/explore
+179.137.221.177,192.168.1.1,恶意流量,False,规则1,2025-08-15 13:49:02,"Mozilla/5.0 (Windows 98; Win 9x 4.90) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/55.0.860.0 Safari/535.2",wp-content/category/list
+18.185.95.96,192.168.1.1,DNS,True,规则1,2025-08-15 10:37:02,Mozilla/5.0 (compatible; MSIE 7.0; Windows 95; Trident/4.1),tags/category/posts
+150.7.141.70,192.168.1.1,视频流量,True,,2025-08-15 23:54:02,"Mozilla/5.0 (Linux; Android 4.0) AppleWebKit/531.1 (KHTML, like Gecko) Chrome/37.0.803.0 Safari/531.1",blog/app/tag
+60.102.41.64,192.168.1.1,恶意流量,True,,2025-08-15 22:26:02,Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 6.1; Trident/3.0),tags
+103.143.106.55,192.168.1.1,HTTP,True,规则2,2025-08-16 00:53:02,Mozilla/5.0 (Android 4.2; Mobile; rv:53.0) Gecko/53.0 Firefox/53.0,tag/search
+181.237.148.160,192.168.1.1,HTTPS,True,,2025-08-15 14:51:02,Opera/8.91.(X11; Linux x86_64; brx-IN) Presto/2.9.187 Version/10.00,wp-content/tag/category
+58.2.248.199,192.168.1.1,视频流量,True,规则1,2025-08-15 22:53:02,Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 6.0; Trident/5.1),list/app
+21.56.135.116,192.168.1.1,HTTP,True,,2025-08-15 18:12:02,Mozilla/5.0 (X11; Linux i686; rv:1.9.6.20) Gecko/4262-11-09 23:09:46 Firefox/3.6.7,posts/blog/tags
+82.228.187.154,192.168.1.1,视频流量,False,规则1,2025-08-16 06:25:02,Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 5.01; Trident/5.0),main
+142.250.160.170,192.168.1.1,HTTPS,True,规则2,2025-08-15 13:04:02,Opera/8.46.(X11; Linux i686; ur-IN) Presto/2.9.187 Version/12.00,wp-content/blog
+182.92.181.81,192.168.1.1,HTTPS,False,规则1,2025-08-16 02:10:02,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3 rv:5.0; ss-ZA) AppleWebKit/531.32.2 (KHTML, like Gecko) Version/4.0.5 Safari/531.32.2",wp-content/blog/blog
+117.78.55.212,192.168.1.1,HTTP,False,规则2,2025-08-15 11:13:02,Mozilla/5.0 (Android 2.0; Mobile; rv:6.0) Gecko/6.0 Firefox/6.0,tag
+16.123.167.4,192.168.1.1,HTTP,True,规则2,2025-08-16 06:29:02,Opera/9.67.(Windows NT 4.0; mg-MG) Presto/2.9.185 Version/10.00,tags/posts/wp-content
+96.39.193.95,192.168.1.1,DNS,True,规则1,2025-08-15 22:14:02,Opera/8.25.(X11; Linux i686; bo-IN) Presto/2.9.186 Version/10.00,main/main
+68.91.12.115,192.168.1.1,恶意流量,False,规则2,2025-08-15 15:51:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_2 like Mac OS X; or-IN) AppleWebKit/531.35.1 (KHTML, like Gecko) Version/4.0.5 Mobile/8B119 Safari/6531.35.1",explore/wp-content
+191.152.174.211,192.168.1.1,HTTP,False,规则1,2025-08-16 03:05:02,"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_9_6 rv:5.0; ar-IN) AppleWebKit/535.13.3 (KHTML, like Gecko) Version/5.0.5 Safari/535.13.3",posts
+45.44.137.155,192.168.1.1,DNS,False,,2025-08-15 15:03:02,"Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/532.2 (KHTML, like Gecko) FxiOS/12.4n6106.0 Mobile/11C204 Safari/532.2",list
+153.226.152.227,192.168.1.1,HTTP,True,,2025-08-16 00:36:02,Opera/8.22.(Windows NT 5.0; gu-IN) Presto/2.9.176 Version/12.00,list/tag/tags
+126.66.63.119,192.168.1.1,HTTP,True,,2025-08-16 08:16:02,Opera/9.87.(X11; Linux i686; ig-NG) Presto/2.9.167 Version/11.00,categories
+172.224.208.252,192.168.1.1,DNS,True,规则2,2025-08-15 11:29:02,"Mozilla/5.0 (Windows; U; Windows 98) AppleWebKit/532.40.6 (KHTML, like Gecko) Version/5.0.3 Safari/532.40.6",main/main/blog
+112.155.181.141,192.168.1.1,HTTPS,True,规则2,2025-08-15 13:56:02,Mozilla/5.0 (Android 5.1.1; Mobile; rv:62.0) Gecko/62.0 Firefox/62.0,app/blog
+62.214.227.65,192.168.1.1,DNS,True,,2025-08-15 15:12:02,"Mozilla/5.0 (Macintosh; PPC Mac OS X 10_6_6 rv:3.0; fo-FO) AppleWebKit/532.1.5 (KHTML, like Gecko) Version/5.0.3 Safari/532.1.5",tag/blog
+100.240.140.166,192.168.1.1,恶意流量,False,,2025-08-15 16:06:02,"Mozilla/5.0 (Macintosh; PPC Mac OS X 10_8_5) AppleWebKit/533.2 (KHTML, like Gecko) Chrome/41.0.849.0 Safari/533.2",category
+27.239.150.174,192.168.1.1,HTTPS,True,规则2,2025-08-16 03:22:02,"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_1 rv:6.0; sw-TZ) AppleWebKit/534.40.1 (KHTML, like Gecko) Version/5.0.5 Safari/534.40.1",search/posts/wp-content
+142.182.159.50,192.168.1.1,DNS,True,,2025-08-16 05:30:02,"Mozilla/5.0 (Linux; Android 3.2.4) AppleWebKit/533.0 (KHTML, like Gecko) Chrome/26.0.869.0 Safari/533.0",tag/explore
+35.126.55.182,192.168.1.1,HTTP,False,规则1,2025-08-15 14:12:02,"Mozilla/5.0 (iPad; CPU iPad OS 2_2_1 like Mac OS X) AppleWebKit/535.0 (KHTML, like Gecko) CriOS/16.0.877.0 Mobile/02P322 Safari/535.0",tag/list
+144.127.161.63,192.168.1.1,HTTPS,False,,2025-08-15 15:34:02,"Mozilla/5.0 (iPad; CPU iPad OS 12_4_4 like Mac OS X) AppleWebKit/533.2 (KHTML, like Gecko) CriOS/44.0.806.0 Mobile/31W448 Safari/533.2",posts/app/posts
+59.248.215.123,192.168.1.1,HTTP,False,规则2,2025-08-15 16:24:02,Opera/9.49.(Windows NT 5.1; tg-TJ) Presto/2.9.177 Version/10.00,tag/explore/blog
+103.97.225.39,192.168.1.1,恶意流量,True,规则1,2025-08-15 12:19:02,Mozilla/5.0 (compatible; MSIE 9.0; Windows 98; Trident/3.0),category/posts/explore
+146.254.209.7,192.168.1.1,视频流量,True,,2025-08-16 07:30:02,Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 11.0; Trident/5.1),search/wp-content/wp-content
+146.154.152.135,192.168.1.1,HTTP,True,规则1,2025-08-15 17:27:02,"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_11_8) AppleWebKit/532.1 (KHTML, like Gecko) Chrome/61.0.856.0 Safari/532.1",app/tags
+146.69.135.194,192.168.1.1,视频流量,False,规则1,2025-08-16 06:44:02,Opera/9.60.(Windows NT 10.0; mi-NZ) Presto/2.9.173 Version/10.00,tag
+166.93.236.10,192.168.1.1,恶意流量,True,,2025-08-15 14:15:02,"Mozilla/5.0 (Linux; Android 4.1) AppleWebKit/534.0 (KHTML, like Gecko) Chrome/49.0.887.0 Safari/534.0",main/app/tag
+169.104.75.226,192.168.1.1,HTTP,True,规则2,2025-08-15 13:09:02,Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_3; rv:1.9.4.20) Gecko/7463-08-23 06:54:46 Firefox/3.6.7,tags
+179.130.77.80,192.168.1.1,恶意流量,False,,2025-08-16 08:05:02,Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_7_4; rv:1.9.2.20) Gecko/8931-08-10 22:27:53 Firefox/4.0,explore/list
+53.102.207.232,192.168.1.1,HTTPS,True,,2025-08-15 16:26:02,"Mozilla/5.0 (Windows; U; Windows 98; Win 9x 4.90) AppleWebKit/535.23.3 (KHTML, like Gecko) Version/4.0 Safari/535.23.3",blog/category/main
+45.79.13.159,192.168.1.1,HTTP,False,,2025-08-15 18:50:02,Mozilla/5.0 (compatible; MSIE 6.0; Windows CE; Trident/5.0),explore/main
+92.83.64.83,192.168.1.1,HTTPS,False,规则2,2025-08-16 04:04:02,Opera/9.27.(Windows NT 11.0; kw-GB) Presto/2.9.176 Version/10.00,wp-content
+92.242.216.226,192.168.1.1,DNS,True,,2025-08-16 01:52:02,"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_11_5 rv:3.0; mr-IN) AppleWebKit/534.34.2 (KHTML, like Gecko) Version/5.1 Safari/534.34.2",search/explore/categories
+32.23.25.255,192.168.1.1,HTTPS,False,规则2,2025-08-15 19:46:02,"Mozilla/5.0 (Macintosh; PPC Mac OS X 10_12_5 rv:6.0; cmn-TW) AppleWebKit/534.2.5 (KHTML, like Gecko) Version/5.0.5 Safari/534.2.5",tag/category/categories
+88.11.38.126,192.168.1.1,恶意流量,False,规则2,2025-08-15 22:14:02,Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 10.0; Trident/3.0),search
+47.178.250.48,192.168.1.1,DNS,True,规则2,2025-08-15 23:23:02,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_5) AppleWebKit/534.1 (KHTML, like Gecko) Chrome/50.0.892.0 Safari/534.1",app/categories
+189.200.252.232,192.168.1.1,HTTPS,True,规则1,2025-08-15 22:11:02,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.0 (KHTML, like Gecko) Chrome/44.0.850.0 Safari/536.0",category/list
+82.39.144.133,192.168.1.1,视频流量,True,,2025-08-16 00:05:02,Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 4.0; Trident/5.0),blog
+186.30.97.78,192.168.1.1,视频流量,True,规则1,2025-08-16 06:37:02,"Mozilla/5.0 (iPad; CPU iPad OS 5_1_1 like Mac OS X) AppleWebKit/531.1 (KHTML, like Gecko) FxiOS/11.0y4414.0 Mobile/91V485 Safari/531.1",list/category
+107.62.101.231,192.168.1.1,HTTPS,True,,2025-08-16 08:36:02,Mozilla/5.0 (Windows NT 11.0; fil-PH; rv:1.9.0.20) Gecko/4073-08-15 00:46:05 Firefox/3.8,explore
+135.164.24.180,192.168.1.1,恶意流量,False,,2025-08-15 21:36:02,Opera/9.24.(X11; Linux i686; bhb-IN) Presto/2.9.175 Version/12.00,wp-content/category
+155.86.175.93,192.168.1.1,DNS,True,,2025-08-15 19:41:02,Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_12_3; rv:1.9.2.20) Gecko/2778-10-27 10:41:55 Firefox/4.0,search/list/blog
+31.17.24.21,192.168.1.1,恶意流量,True,规则2,2025-08-15 20:00:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 3_1 like Mac OS X; shs-CA) AppleWebKit/534.22.3 (KHTML, like Gecko) Version/3.0.5 Mobile/8B116 Safari/6534.22.3",posts
+168.69.42.223,192.168.1.1,DNS,True,,2025-08-15 20:01:02,"Mozilla/5.0 (iPad; CPU iPad OS 3_1_3 like Mac OS X) AppleWebKit/533.1 (KHTML, like Gecko) FxiOS/14.7k5755.0 Mobile/96P342 Safari/533.1",search/tags
+144.8.85.171,192.168.1.1,恶意流量,True,规则1,2025-08-15 14:47:02,"Mozilla/5.0 (Windows; U; Windows 95) AppleWebKit/532.43.1 (KHTML, like Gecko) Version/4.0.2 Safari/532.43.1",list/explore/search
+19.139.1.254,192.168.1.1,恶意流量,True,规则2,2025-08-15 15:45:02,Opera/8.79.(X11; Linux x86_64; lzh-TW) Presto/2.9.182 Version/12.00,list/search
+33.228.131.186,192.168.1.1,视频流量,False,规则1,2025-08-15 23:56:02,"Mozilla/5.0 (Windows; U; Windows CE) AppleWebKit/532.3.1 (KHTML, like Gecko) Version/4.0.4 Safari/532.3.1",list/explore/tag
+26.197.170.251,192.168.1.1,HTTP,False,,2025-08-15 23:06:02,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/531.2 (KHTML, like Gecko) Chrome/21.0.853.0 Safari/531.2",category
+136.97.14.34,192.168.1.1,恶意流量,True,规则2,2025-08-15 18:13:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_2 like Mac OS X; wae-CH) AppleWebKit/531.5.2 (KHTML, like Gecko) Version/3.0.5 Mobile/8B117 Safari/6531.5.2",tag
+143.231.7.185,192.168.1.1,恶意流量,True,规则2,2025-08-15 13:35:02,"Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_6_5) AppleWebKit/534.2 (KHTML, like Gecko) Chrome/28.0.878.0 Safari/534.2",posts/list
+76.183.178.154,192.168.1.1,HTTP,True,,2025-08-16 03:11:02,"Mozilla/5.0 (Windows; U; Windows 95) AppleWebKit/532.42.7 (KHTML, like Gecko) Version/4.1 Safari/532.42.7",list/blog/posts
+20.103.200.186,192.168.1.1,DNS,True,,2025-08-15 23:30:02,"Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_8_1 rv:4.0; tg-TJ) AppleWebKit/535.10.1 (KHTML, like Gecko) Version/4.0 Safari/535.10.1",wp-content
+102.118.47.140,192.168.1.1,恶意流量,True,规则1,2025-08-15 23:19:02,Opera/8.66.(X11; Linux x86_64; ps-AF) Presto/2.9.189 Version/11.00,posts
+10.243.59.93,192.168.1.1,HTTPS,False,规则1,2025-08-16 01:47:02,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/24.0.898.0 Safari/535.1",wp-content
+204.167.118.76,192.168.1.1,DNS,True,,2025-08-15 14:11:02,Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3; rv:1.9.5.20) Gecko/4164-04-21 21:00:28 Firefox/4.0,app/posts
+144.159.166.119,192.168.1.1,恶意流量,True,规则2,2025-08-15 12:16:02,"Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_6 like Mac OS X) AppleWebKit/532.2 (KHTML, like Gecko) CriOS/22.0.848.0 Mobile/79A472 Safari/532.2",app
+46.22.154.182,192.168.1.1,HTTP,True,,2025-08-15 17:41:02,"Mozilla/5.0 (Windows CE) AppleWebKit/533.1 (KHTML, like Gecko) Chrome/22.0.844.0 Safari/533.1",main/wp-content
+195.23.179.6,192.168.1.1,视频流量,True,规则1,2025-08-15 22:07:02,Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 6.0; Trident/5.1),blog
+172.107.121.91,192.168.1.1,DNS,True,规则2,2025-08-16 00:51:02,Mozilla/5.0 (compatible; MSIE 9.0; Windows CE; Trident/3.1),categories
+175.28.104.124,192.168.1.1,HTTP,True,规则1,2025-08-15 10:41:02,"Mozilla/5.0 (iPhone; CPU iPhone OS 17_1_1 like Mac OS X) AppleWebKit/536.2 (KHTML, like Gecko) FxiOS/14.5j6636.0 Mobile/86F163 Safari/536.2",categories/list/categories
+194.112.18.105,192.168.1.1,视频流量,True,规则2,2025-08-15 11:40:02,"Mozilla/5.0 (Windows NT 11.0) AppleWebKit/536.2 (KHTML, like Gecko) Chrome/15.0.813.0 Safari/536.2",wp-content/wp-content
+157.169.174.16,192.168.1.1,HTTP,False,规则2,2025-08-15 14:02:02,"Mozilla/5.0 (Windows; U; Windows NT 5.0) AppleWebKit/532.8.2 (KHTML, like Gecko) Version/5.1 Safari/532.8.2",blog
+179.24.0.88,192.168.1.1,恶意流量,True,,2025-08-16 08:07:02,Mozilla/5.0 (compatible; MSIE 5.0; Windows 98; Win 9x 4.90; Trident/5.0),explore/main
+205.58.230.81,192.168.1.1,DNS,False,,2025-08-16 01:37:02,Mozilla/5.0 (Android 4.4.2; Mobile; rv:26.0) Gecko/26.0 Firefox/26.0,app
+168.43.184.3,192.168.1.1,DNS,False,规则2,2025-08-15 16:56:02,"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_2) AppleWebKit/533.2 (KHTML, like Gecko) Chrome/28.0.864.0 Safari/533.2",main/blog/tag
+84.135.75.14,192.168.1.1,HTTPS,True,规则2,2025-08-16 05:46:02,Mozilla/5.0 (X11; Linux i686; rv:1.9.7.20) Gecko/6376-08-24 12:52:16 Firefox/3.8,tags
+155.36.227.191,192.168.1.1,HTTP,True,规则1,2025-08-15 17:54:02,"Mozilla/5.0 (Windows 98) AppleWebKit/534.1 (KHTML, like Gecko) Chrome/15.0.845.0 Safari/534.1",posts
+57.180.184.139,192.168.1.1,恶意流量,True,规则1,2025-08-16 01:41:02,Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_12_1; rv:1.9.3.20) Gecko/4559-11-14 06:20:13 Firefox/3.6.5,search/blog
+151.208.12.155,192.168.1.1,DNS,False,,2025-08-15 15:22:02,Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 4.0; Trident/3.0),search
+180.91.52.94,192.168.1.1,视频流量,True,规则2,2025-08-15 23:25:02,"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_1 like Mac OS X; ks-IN) AppleWebKit/533.6.6 (KHTML, like Gecko) Version/4.0.5 Mobile/8B111 Safari/6533.6.6",categories/wp-content/search
+167.110.5.157,192.168.1.1,恶意流量,False,规则2,2025-08-16 09:41:02,Opera/9.65.(Windows NT 10.0; th-TH) Presto/2.9.178 Version/10.00,explore/explore/category
+177.160.78.92,192.168.1.1,HTTP,True,规则1,2025-08-15 16:54:02,Mozilla/5.0 (Android 3.2.6; Mobile; rv:24.0) Gecko/24.0 Firefox/24.0,explore/app
+97.34.87.199,192.168.1.1,HTTPS,False,规则2,2025-08-15 16:10:02,"Mozilla/5.0 (iPad; CPU iPad OS 14_8_1 like Mac OS X) AppleWebKit/532.0 (KHTML, like Gecko) CriOS/38.0.872.0 Mobile/66Y429 Safari/532.0",blog/main/main
+43.126.206.233,192.168.1.1,HTTPS,True,规则1,2025-08-16 00:14:02,"Mozilla/5.0 (Windows NT 5.01) AppleWebKit/532.2 (KHTML, like Gecko) Chrome/19.0.830.0 Safari/532.2",blog/main
+145.64.170.24,192.168.1.1,视频流量,True,规则2,2025-08-15 10:51:02,Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_0; rv:1.9.5.20) Gecko/6493-03-05 14:12:59 Firefox/3.6.2,list/main/search
+130.63.233.21,192.168.1.1,HTTP,True,规则1,2025-08-15 10:50:02,Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 10.0; Trident/4.1),posts/wp-content
+105.161.75.237,192.168.1.1,恶意流量,False,规则2,2025-08-16 05:09:02,Mozilla/5.0 (X11; Linux x86_64; rv:1.9.6.20) Gecko/8296-12-16 01:03:17 Firefox/3.6.9,tags/tags
+74.28.147.14,192.168.1.1,HTTP,False,规则1,2025-08-16 00:10:02,Opera/8.22.(Windows NT 5.01; sq-ML) Presto/2.9.172 Version/11.00,app/categories/search
+108.115.103.58,192.168.1.1,DNS,False,规则1,2025-08-15 19:23:02,Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.01; Trident/3.1),blog/tag

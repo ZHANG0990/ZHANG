@@ -1,0 +1,664 @@
+/* 告警中心样式 */
+.alerts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.alerts-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.alerts-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alert-stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-stat-icon.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.alert-stat-icon.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.alert-stat-icon.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.alert-stat-icon.primary {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+/* 告警列表项样式 */
+.alert-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  background: white;
+  overflow: hidden;
+}
+
+.alert-item:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.alert-item.unread {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+.alert-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.alert-severity-indicator {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.alert-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.alert-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.alert-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.alert-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.alert-tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.alert-tag.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.alert-tag.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.alert-tag.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.alert-tag.primary {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.alert-tag.secondary {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.alert-description {
+  margin-bottom: 1rem;
+}
+
+.alert-description p {
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.alert-meta-info {
+  margin-top: 1rem;
+}
+
+.alert-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.alert-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.alert-meta-item i {
+  width: 1rem;
+  text-align: center;
+}
+
+.alert-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.alert-action-btn {
+  color: #6b7280;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.alert-action-btn:hover {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: #d1d5db;
+}
+
+.alert-action-btn.primary {
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.alert-action-btn.primary:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.alert-action-btn.success {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.alert-action-btn.success:hover {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.alert-action-btn.secondary {
+  color: #6b7280;
+  border-color: rgba(107, 114, 128, 0.2);
+}
+
+.alert-action-btn.secondary:hover {
+  background: rgba(107, 114, 128, 0.1);
+}
+
+/* 流量预览样式 */
+.traffic-preview {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.traffic-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.traffic-preview-title {
+  font-size: 0.875rem;
+}
+
+.traffic-preview-content {
+  space-y: 0.75rem;
+}
+
+.traffic-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.traffic-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.traffic-preview-label {
+  color: #92400e;
+  font-weight: 500;
+}
+
+.traffic-preview-value {
+  color: #1e293b;
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+}
+
+.traffic-prediction {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.traffic-prediction-label {
+  font-size: 0.75rem;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.traffic-request-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #ef4444;
+}
+
+.traffic-request-label {
+  font-size: 0.75rem;
+  color: #dc2626;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.traffic-request-snippet {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  word-break: break-all;
+}
+
+/* 模态框样式 */
+.alert-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.alert-modal.hidden {
+  display: none;
+}
+
+.alert-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.alert-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 56rem;
+  max-height: 90vh;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-modal-content.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.alert-modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alert-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  max-height: calc(90vh - 140px);
+}
+
+.alert-modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  background: white;
+  position: sticky;
+  bottom: 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-detail-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-detail-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.alert-detail-value {
+  font-family: 'Courier New', monospace;
+}
+
+.alert-description-box {
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-suggestions-box {
+  padding: 0.75rem;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+}
+
+.alert-suggestions-list {
+  list-style: disc;
+  list-style-position: inside;
+  font-size: 0.875rem;
+}
+
+.alert-suggestions-list li {
+  margin-bottom: 0.25rem;
+}
+
+/* 流量信息卡片样式（详情页） */
+.traffic-info-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.traffic-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.traffic-info-header h5 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.traffic-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.traffic-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.traffic-info-icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
+  flex-shrink: 0;
+}
+
+.traffic-info-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.traffic-info-value {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #1e293b;
+  margin: 0;
+  word-break: break-all;
+}
+
+.traffic-request-content {
+  margin-top: 1rem;
+}
+
+.traffic-request-box {
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.traffic-request-code {
+  display: block;
+  color: #f1f5f9;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.threat-analysis {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #ef4444;
+}
+
+.threat-analysis-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ef4444;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.threat-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 空状态样式 */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .alerts-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .alerts-filters {
+    flex-wrap: wrap;
+  }
+  
+  .alerts-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .alert-item-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .alert-severity-indicator {
+    align-self: flex-start;
+  }
+  
+  .alert-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .alert-title {
+    min-width: auto;
+  }
+  
+  .alert-actions {
+    align-self: flex-end;
+  }
+  
+  .alert-modal-content {
+    margin: 1rem;
+    max-width: none;
+  }
+  
+  .alert-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .traffic-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .traffic-info-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .traffic-preview-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .traffic-request-preview {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .threat-tags {
+    justify-content: center;
+  }
+}

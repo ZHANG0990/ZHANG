@@ -1,0 +1,641 @@
+{% extends "base.html" %}
+
+{% block title %}流量监控{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">流量实时监控</h2>
+  <div class="flex gap-2">
+    <div class="relative">
+      <select id="traffic-filter" class="form-select pr-8 appearance-none">
+        <option value="">全部流量类型</option>
+        <option value="HTTP">HTTP流量</option>
+        <option value="HTTPS">HTTPS流量</option>
+        <option value="DNS">DNS流量</option>
+        <option value="视频流">视频流</option>
+        <option value="其他">其他</option>
+      </select>
+      <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-dark-2 pointer-events-none"></i>
+    </div>
+    <button id="refresh-btn" class="btn btn-primary">
+      <i class="fa fa-refresh"></i> 刷新
+    </button>
+  </div>
+</div>
+
+<!-- 实时统计卡片 -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+  <div class="card">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-dark-2 text-sm">总流量数</p>
+        <h3 class="text-2xl font-bold mt-1">{{ traffic_list|length }}</h3>
+        <p class="text-dark-2 text-sm mt-2 flex items-center">
+          <i class="fa fa-clock-o mr-1"></i> 实时更新
+        </p>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+        <i class="fa fa-exchange"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-dark-2 text-sm">白流量</p>
+        <h3 class="text-2xl font-bold mt-1 text-success">
+          {{ traffic_list|selectattr('predicted_type', 'equalto', '白流量')|list|length }}
+        </h3>
+        <p class="text-dark-2 text-sm mt-2 flex items-center">
+          <i class="fa fa-check mr-1 text-success"></i> 
+          {% if traffic_list|length > 0 %}
+            {{ "%.1f"|format((traffic_list|selectattr('predicted_type', 'equalto', '白流量')|list|length / traffic_list|length * 100)) }}%
+          {% else %}
+            0%
+          {% endif %}
+        </p>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
+        <i class="fa fa-check-circle"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-dark-2 text-sm">可疑流量</p>
+        <h3 class="text-2xl font-bold mt-1 text-warning">
+          {{ (traffic_list|selectattr('predicted_type', 'equalto', '可疑流量')|list|length) + 
+             (traffic_list|selectattr('predicted_type', 'equalto', '恶意流量')|list|length) }}
+        </h3>
+        <p class="text-dark-2 text-sm mt-2 flex items-center">
+          <i class="fa fa-exclamation-triangle mr-1 text-warning"></i> 需关注
+        </p>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+        <i class="fa fa-exclamation-triangle"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-dark-2 text-sm">最新记录</p>
+        <h3 class="text-2xl font-bold mt-1">
+          {% if traffic_list %}
+            {{ traffic_list[0].timestamp.strftime('%H:%M') }}
+          {% else %}
+            --:--
+          {% endif %}
+        </h3>
+        <p class="text-dark-2 text-sm mt-2 flex items-center">
+          <i class="fa fa-clock-o mr-1"></i> 
+          {% if traffic_list %}
+            {{ traffic_list[0].timestamp.strftime('%m-%d') }}
+          {% else %}
+            暂无数据
+          {% endif %}
+        </p>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+        <i class="fa fa-clock-o"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 实时流量图表 -->
+<div class="card mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">实时流量状态</h3>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-primary"></span>
+        <span class="text-sm">总流量</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-success"></span>
+        <span class="text-sm">白流量</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-warning"></span>
+        <span class="text-sm">可疑流量</span>
+      </div>
+    </div>
+  </div>
+  <div class="h-80">
+    <canvas id="realtime-traffic-chart"></canvas>
+  </div>
+</div>
+
+<!-- 流量详情列表 -->
+<div class="card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">流量详情列表</h3>
+    <div class="flex gap-2">
+      <div class="relative">
+        <input type="text" id="search-input" placeholder="搜索IP或内容..." class="search-input">
+        <i class="fa fa-search search-icon"></i>
+      </div>
+      <button id="export-btn" class="btn btn-outline">
+        <i class="fa fa-download"></i> 导出
+      </button>
+    </div>
+  </div>
+  
+  {% if traffic_list %}
+    <div class="overflow-x-auto">
+      <table id="traffic-table" class="data-table">
+        <thead>
+          <tr>
+            <th>
+              <button class="flex items-center gap-1 hover:text-primary" onclick="sortTable('traffic-table', 0)">
+                源IP <i class="fa fa-sort text-xs"></i>
+              </button>
+            </th>
+            <th>
+              <button class="flex items-center gap-1 hover:text-primary" onclick="sortTable('traffic-table', 1)">
+                目标IP <i class="fa fa-sort text-xs"></i>
+              </button>
+            </th>
+            <th>流量类型</th>
+            <th>AI预测</th>
+            <th>上传者</th>
+            <th>
+              <button class="flex items-center gap-1 hover:text-primary" onclick="sortTable('traffic-table', 5, 'date')">
+                时间 <i class="fa fa-sort text-xs"></i>
+              </button>
+            </th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in traffic_list %}
+            <tr data-traffic-type="{{ data.traffic_type }}" data-predicted-type="{{ data.predicted_type }}">
+              <td class="font-mono text-sm">{{ data.source_ip }}</td>
+              <td class="font-mono text-sm">{{ data.dest_ip }}</td>
+              <td>
+                <span class="tag tag-primary">{{ data.traffic_type }}</span>
+              </td>
+              <td>
+                {% if data.alert_status == 'resolved' %}
+                  <span class="tag tag-resolved">
+                    {{ data.predicted_type }}
+                  </span>
+                {% elif data.alert_status == 'ignored' %}
+                  <span class="tag tag-ignored">
+                    {{ data.predicted_type }}
+                  </span>
+                {% elif data.has_rule_match or '匹配规则' in data.predicted_type or data.predicted_type == '白流量' or '白流量' in data.predicted_type %}
+                  <span class="tag tag-white-rule">
+                    {{ data.display_predicted_type or data.predicted_type }}
+                  </span>
+                {% elif data.predicted_type == '正常流量' %}
+                  <span class="tag tag-success">
+                    {{ data.predicted_type }}
+                  </span>
+                {% else %}
+                  <span class="tag tag-suspicious">
+                    {{ data.predicted_type }}
+                  </span>
+                {% endif %}
+              </td>
+              <td class="text-sm text-dark-2">
+                <span class="tag tag-info">用户{{ data.user_id }}</span>
+              </td>
+              <td class="text-sm text-dark-2">{{ data.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              <td>
+                <div class="status-indicator">
+                  {% if data.alert_status == 'resolved' %}
+                    <span class="status-dot resolved"></span>
+                    <span class="text-sm">已处理</span>
+                  {% elif data.alert_status == 'ignored' %}
+                    <span class="status-dot ignored"></span>
+                    <span class="text-sm">已忽略</span>
+                  {% elif data.predicted_type == '白流量' or data.predicted_type == '正常流量' or data.has_rule_match or '匹配规则' in data.predicted_type %}
+                    <span class="status-dot online"></span>
+                    <span class="text-sm">正常</span>
+                  {% else %}
+                    <span class="status-dot warning"></span>
+                    <span class="text-sm">待审核</span>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <div class="flex gap-2">
+                  <button class="text-primary text-sm hover:underline" 
+                          onclick="viewDetails({{ data.id }})">
+                    <i class="fa fa-eye"></i> 详情
+                  </button>
+                  <button class="text-dark-2 text-sm hover:text-primary" 
+                          onclick="copyToClipboard('{{ data.source_ip }} -> {{ data.dest_ip }}')">
+                    <i class="fa fa-copy"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- 分页信息 -->
+    <div class="flex items-center justify-between mt-4 pt-4 border-t border-light-2">
+      <div class="text-sm text-dark-2">
+        显示 {{ traffic_list|length }} 条记录
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-outline btn-sm" disabled>
+          <i class="fa fa-chevron-left"></i> 上一页
+        </button>
+        <button class="btn btn-outline btn-sm" disabled>
+          下一页 <i class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="fa fa-database"></i>
+      <p>暂无流量记录</p>
+      <p class="text-sm mt-2">请前往 <a href="{{ url_for('main.file_drop') }}" class="text-primary hover:underline">文件拖放过滤</a> 添加流量数据</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- 详情模态框 -->
+<div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+  <div class="modal-backdrop" onclick="closeDetailModal()"></div>
+  <div class="modal-content w-full max-w-2xl">
+    <div class="p-6 border-b border-light-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold">流量详情</h3>
+        <button onclick="closeDetailModal()" class="p-1 rounded-full hover:bg-light-1">
+          <i class="fa fa-times text-dark-2"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div id="detail-content" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- 详情内容将通过JavaScript动态填充 -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 防抖函数
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始化高级搜索功能
+  initAdvancedSearch();
+  
+  // 刷新按钮
+  const refreshBtn = document.getElementById('refresh-btn');
+  refreshBtn.addEventListener('click', function() {
+    setLoading(this, true);
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  });
+  
+  // 导出功能
+  const exportBtn = document.getElementById('export-btn');
+  exportBtn.addEventListener('click', function() {
+    exportTableToCSV('traffic-table', 'traffic_data.csv');
+  });
+});
+
+// 按流量类型筛选
+function filterTrafficByType(type) {
+  const rows = document.querySelectorAll('#traffic-table tbody tr');
+  rows.forEach(row => {
+    if (!type || row.dataset.trafficType === type) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// 查看详情
+function viewDetails(id) {
+  const detailContent = document.getElementById('detail-content');
+  
+  // 显示加载状态
+  detailContent.innerHTML = `
+    <div class="flex items-center justify-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <span class="ml-2">加载中...</span>
+    </div>
+  `;
+  
+  document.getElementById('detail-modal').classList.remove('hidden');
+  
+  // 从API获取真实数据
+  fetch(`/api/traffic-detail/${id}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        detailContent.innerHTML = `
+          <div class="text-center py-8">
+            <i class="fa fa-exclamation-triangle text-warning text-2xl mb-2"></i>
+            <p class="text-dark-2">${data.error}</p>
+          </div>
+        `;
+        return;
+      }
+      
+      detailContent.innerHTML = `
+        <div class="space-y-3">
+          <div>
+            <label class="text-sm font-medium text-dark-2">流量ID</label>
+            <p class="font-mono">#${data.id}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">源IP地址</label>
+            <p class="font-mono">${data.source_ip}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">目标IP地址</label>
+            <p class="font-mono">${data.dest_ip}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">流量类型</label>
+            <p><span class="tag tag-primary">${data.traffic_type}</span></p>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="text-sm font-medium text-dark-2">AI预测结果</label>
+            <p><span class="tag ${data.predicted_type === '白流量' ? 'tag-white' : 'tag-suspicious'}">${data.predicted_type}</span></p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">置信度</label>
+            <p>${data.confidence}%</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">检测时间</label>
+            <p>${data.timestamp}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-dark-2">请求内容</label>
+            <p class="text-sm bg-light-1 p-2 rounded font-mono whitespace-pre-line">${data.request_content}</p>
+          </div>
+        </div>
+      `;
+    })
+    .catch(error => {
+      console.error('获取流量详情失败:', error);
+      detailContent.innerHTML = `
+        <div class="text-center py-8">
+          <i class="fa fa-exclamation-triangle text-danger text-2xl mb-2"></i>
+          <p class="text-dark-2">获取详情失败，请稍后重试</p>
+        </div>
+      `;
+    });
+}
+
+// 关闭详情模态框
+function closeDetailModal() {
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+// 高级搜索功能
+function initAdvancedSearch() {
+  const searchInput = document.getElementById('search-input');
+  const trafficFilter = document.getElementById('traffic-filter');
+  
+  // 实时搜索
+  searchInput.addEventListener('input', debounce(function() {
+    performSearch();
+  }, 300));
+  
+  // 流量类型筛选
+  trafficFilter.addEventListener('change', function() {
+    performSearch();
+  });
+}
+
+// 执行搜索
+function performSearch() {
+  const searchTerm = document.getElementById('search-input').value.trim();
+  const trafficType = document.getElementById('traffic-filter').value;
+  
+  // 构建查询参数
+  const params = new URLSearchParams();
+  if (searchTerm) params.append('q', searchTerm);
+  if (trafficType) params.append('type', trafficType);
+  
+  // 显示加载状态
+  const tableBody = document.querySelector('#traffic-table tbody');
+  tableBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="text-center py-8">
+            <div class="flex items-center justify-center">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-2"></div>
+              搜索中...
+            </div>
+          </td>
+        </tr>
+  `;
+  
+  // 发送搜索请求
+  fetch(`/api/traffic-search?${params.toString()}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        updateTrafficTable(data.data);
+        updateSearchStats(data.total, searchTerm);
+      } else {
+        showToast('搜索失败: ' + data.error, 'error');
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-8 text-danger">
+              <i class="fa fa-exclamation-triangle mb-2"></i><br>
+              搜索失败，请重试
+            </td>
+          </tr>
+        `;
+      }
+    })
+    .catch(error => {
+      console.error('搜索错误:', error);
+      showToast('网络错误，请重试', 'error');
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="text-center py-8 text-danger">
+            <i class="fa fa-wifi mb-2"></i><br>
+            网络连接失败
+          </td>
+        </tr>
+      `;
+    });
+}
+
+// 更新流量表格
+function updateTrafficTable(trafficList) {
+  const tableBody = document.querySelector('#traffic-table tbody');
+  
+  if (trafficList.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="text-center py-8 text-dark-2">
+          <i class="fa fa-search mb-2"></i><br>
+          未找到匹配的流量记录
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  const rows = trafficList.map(data => {
+    // 根据告警状态和流量类型确定标签样式
+    let tagClass = '';
+    
+    if (data.alert_status === 'resolved') {
+      tagClass = 'tag-resolved';
+    } else if (data.alert_status === 'ignored') {
+      tagClass = 'tag-ignored';
+    } else if (data.has_rule_match || data.predicted_type.includes('匹配规则') || 
+               data.predicted_type === '白流量' || data.predicted_type.includes('白流量')) {
+      tagClass = 'tag-white-rule';
+    } else if (data.predicted_type === '正常流量') {
+      tagClass = 'tag-success';
+    } else {
+      tagClass = 'tag-suspicious';
+    }
+    
+    // 确定状态显示
+    let statusDotClass, statusText;
+    
+    if (data.alert_status === 'resolved') {
+        statusDotClass = 'resolved';
+        statusText = '已处理';
+    } else if (data.alert_status === 'ignored') {
+        statusDotClass = 'ignored';
+        statusText = '已忽略';
+    } else {
+        const isNormalTraffic = data.predicted_type === '白流量' || 
+                               data.predicted_type === '正常流量' || 
+                               data.predicted_type.includes('正常流量') ||
+                               data.predicted_type.includes('白流量') ||
+                               data.predicted_type.includes('匹配规则') ||
+                               data.has_rule_match;
+                               
+        statusDotClass = isNormalTraffic ? 'online' : 'warning';
+        statusText = isNormalTraffic ? '正常' : '待审核';
+    }
+    
+    return `
+    <tr data-traffic-type="${data.traffic_type}" data-predicted-type="${data.predicted_type}">
+      <td class="font-mono text-sm">${data.source_ip}</td>
+      <td class="font-mono text-sm">${data.dest_ip}</td>
+      <td>
+        <span class="tag tag-primary">${data.traffic_type}</span>
+      </td>
+      <td><span class="tag ${tagClass}">${data.predicted_type}</span></td>
+      <td class="text-sm text-dark-2">
+        <span class="tag tag-info">${data.username || ('用户' + data.user_id)}</span>
+      </td>
+      <td class="text-sm text-dark-2">${data.timestamp}</td>
+      <td>
+        <div class="status-indicator">
+          <span class="status-dot ${statusDotClass}"></span>
+          <span class="text-sm">${statusText}</span>
+        </div>
+      </td>
+      <td>
+        <div class="flex gap-2">
+          <button class="text-primary text-sm hover:underline" 
+                  onclick="viewDetails(${data.id})">
+            <i class="fa fa-eye"></i> 详情
+          </button>
+          <button class="text-dark-2 text-sm hover:text-primary" 
+                  onclick="copyToClipboard('${data.source_ip} -> ${data.dest_ip}')">
+            <i class="fa fa-copy"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+    `;
+  }).join('');
+  
+  tableBody.innerHTML = rows;
+}
+
+// 更新搜索统计信息
+function updateSearchStats(total, searchTerm) {
+  const statsElement = document.querySelector('.flex.items-center.justify-between.mt-4 .text-sm.text-dark-2');
+  if (statsElement) {
+    if (searchTerm) {
+      statsElement.textContent = `搜索 "${searchTerm}" 找到 ${total} 条记录`;
+    } else {
+      statsElement.textContent = `显示 ${total} 条记录`;
+    }
+  }
+}
+
+// 高级导出功能
+function exportTableToCSV(tableId, filename) {
+  const searchTerm = document.getElementById('search-input').value.trim();
+  const trafficType = document.getElementById('traffic-filter').value;
+  
+  // 构建导出参数
+  const params = new URLSearchParams();
+  if (searchTerm) params.append('q', searchTerm);
+  if (trafficType) params.append('type', trafficType);
+  
+  // 显示导出状态
+  const exportBtn = document.getElementById('export-btn');
+  const originalText = exportBtn.innerHTML;
+  exportBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> 导出中...';
+  exportBtn.disabled = true;
+  
+  // 创建下载链接
+  const downloadUrl = `/api/traffic-export?${params.toString()}`;
+  
+  // 使用fetch检查响应
+  fetch(downloadUrl)
+    .then(response => {
+      if (response.ok) {
+        // 创建下载链接
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename || 'traffic_data.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast('数据导出成功');
+      } else {
+        throw new Error('导出失败');
+      }
+    })
+    .catch(error => {
+      console.error('导出错误:', error);
+      showToast('导出失败，请重试', 'error');
+    })
+    .finally(() => {
+      // 恢复按钮状态
+      exportBtn.innerHTML = originalText;
+      exportBtn.disabled = false;
+    });
+}
+</script>
+{% endblock %}

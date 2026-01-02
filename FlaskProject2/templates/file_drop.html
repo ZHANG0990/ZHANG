@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}文件拖放过滤{% endblock %}
+
+{% block extra_css %}
+<style>
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.online {
+    background-color: #00B42A;
+}
+
+#file-drop-area.drag-over {
+    border-color: #165DFF;
+    background-color: rgba(22, 93, 255, 0.05);
+}
+
+.file-item {
+    transition: all 0.2s ease;
+}
+
+.file-item:hover {
+    background-color: rgba(242, 243, 245, 0.5);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">文件拖放过滤</h2>
+  <div class="flex gap-2">
+    <button id="clear-files-btn" class="btn btn-outline">
+      <i class="fa fa-trash"></i> 清空文件
+    </button>
+    <button id="apply-file-filter-btn" class="btn btn-primary">
+      <i class="fa fa-filter"></i> AI分析
+    </button>
+  </div>
+</div>
+
+<!-- 文件拖放区域 -->
+<div class="card mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">文件上传分析</h3>
+    <div class="flex items-center gap-2 text-sm text-dark-2">
+      <i class="fa fa-info-circle"></i>
+      <span>支持拖放或点击上传文件进行AI分析</span>
+    </div>
+  </div>
+  
+  <!-- 拖放区域 -->
+  <div id="file-drop-area" class="border-2 border-dashed border-light-2 rounded-xl p-10 text-center mb-6 transition-all duration-300 hover:border-primary/50">
+    <div class="max-w-md mx-auto">
+      <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fa fa-cloud-upload text-2xl text-primary"></i>
+      </div>
+      <h3 class="text-lg font-medium mb-2">拖放文件到此处</h3>
+      <p class="text-dark-2 mb-4">支持CSV、TXT、LOG等数据文件，以及常见文件类型</p>
+      <label class="inline-block btn btn-outline">
+        <i class="fa fa-plus"></i> 选择文件
+        <input type="file" id="file-input" multiple class="hidden" />
+      </label>
+      <p class="text-xs text-dark-2 mt-4">支持的格式：.csv, .txt, .log, .doc, .pdf, .jpg, .png, .mp4, .zip 等</p>
+    </div>
+  </div>
+  
+  <!-- 已选文件列表 -->
+  <div class="border-t border-light-2 pt-4">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="font-medium">已选择的文件</h4>
+      <p class="text-sm text-dark-2" id="file-count">0 个文件</p>
+    </div>
+    
+    <div id="file-list" class="space-y-2">
+      <!-- 空状态 -->
+      <div id="empty-file-state" class="flex flex-col items-center justify-center py-8 text-dark-2">
+        <i class="fa fa-file-o text-3xl mb-2 opacity-30"></i>
+        <p>尚未添加任何文件，请拖放文件或点击"选择文件"按钮</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 手动流量数据输入 -->
+<div class="card mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">手动流量数据输入</h3>
+    <div class="flex items-center gap-2 text-sm text-dark-2">
+      <i class="fa fa-info-circle"></i>
+      <span>请填写流量信息进行AI分析</span>
+    </div>
+  </div>
+  
+  <form method="POST" id="traffic-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label for="source_ip" class="block text-sm font-medium text-dark-2 mb-1">源IP地址</label>
+      <input type="text" id="source_ip" name="source_ip" class="form-input" 
+             placeholder="例如: 192.168.1.100" 
+             pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$">
+      <p class="text-xs text-dark-2 mt-1">请输入有效的IPv4地址</p>
+    </div>
+    
+    <div>
+      <label for="dest_ip" class="block text-sm font-medium text-dark-2 mb-1">目标IP地址</label>
+      <input type="text" id="dest_ip" name="dest_ip" class="form-input" 
+             placeholder="例如: 8.8.8.8" 
+             pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$">
+      <p class="text-xs text-dark-2 mt-1">请输入有效的IPv4地址</p>
+    </div>
+    
+    <div>
+      <label for="traffic_type" class="block text-sm font-medium text-dark-2 mb-1">流量类型</label>
+      <div class="relative">
+        <select id="traffic_type" name="traffic_type" class="form-input pr-8 appearance-none">
+          <option value="">请选择流量类型</option>
+          <option value="HTTP">HTTP流量</option>
+          <option value="HTTPS">HTTPS流量</option>
+          <option value="DNS">DNS查询</option>
+          <option value="视频流">视频流</option>
+          <option value="文件传输">文件传输</option>
+          <option value="其他">其他</option>
+        </select>
+        <i class="fa fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-dark-2 pointer-events-none"></i>
+      </div>
+    </div>
+    
+    <div>
+      <label for="content" class="block text-sm font-medium text-dark-2 mb-1">请求内容摘要</label>
+      <input type="text" id="content" name="content" class="form-input" 
+             placeholder="例如: GET /api/data">
+      <p class="text-xs text-dark-2 mt-1">简要描述请求内容或特征</p>
+    </div>
+    
+    <div class="md:col-span-2 flex gap-2">
+      <button type="button" id="clear-form-btn" class="btn btn-outline">
+        <i class="fa fa-refresh"></i> 重置表单
+      </button>
+      <button type="submit" class="btn btn-primary">
+        <i class="fa fa-filter"></i> AI分析
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- AI分析结果展示 -->
+{% if request.method == 'POST' and request.form.get('source_ip') %}
+<div class="card mb-6 fade-in">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">AI分析结果</h3>
+    <div class="flex items-center gap-2">
+      <span class="status-dot online"></span>
+      <span class="text-sm text-success">分析完成</span>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-4 bg-light-1 rounded-lg">
+      <h4 class="font-medium mb-2">输入信息</h4>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-dark-2">源IP:</span>
+          <span class="font-mono">{{ request.form.get('source_ip', '') }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-dark-2">目标IP:</span>
+          <span class="font-mono">{{ request.form.get('dest_ip', '') }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-dark-2">流量类型:</span>
+          <span>{{ request.form.get('traffic_type', '') }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-dark-2">内容摘要:</span>
+          <span>{{ request.form.get('content', '') }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-4 bg-primary/5 rounded-lg border border-primary/20">
+      <h4 class="font-medium mb-2 text-primary">AI预测结果</h4>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl mx-auto mb-3">
+          <i class="fa fa-check-circle"></i>
+        </div>
+        <p class="text-lg font-bold text-primary mb-2">白流量</p>
+        <p class="text-sm text-dark-2">置信度: 95.2%</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- 最近分析记录 -->
+<div class="card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">最近分析记录</h3>
+    <div class="flex gap-2">
+      <button id="refresh-records-btn" class="text-primary text-sm hover:underline">
+        <i class="fa fa-refresh"></i> 刷新
+      </button>
+      <a href="{{ url_for('main.traffic_monitor') }}" class="text-primary text-sm hover:underline">查看全部</a>
+    </div>
+  </div>
+  
+  <div id="analysis-records">
+    {% if traffic_data %}
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-light-2">
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">源IP</th>
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">目标IP</th>
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">流量类型</th>
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">AI预测</th>
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">时间</th>
+              <th class="text-left py-3 px-2 text-sm font-medium text-dark-2">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for data in traffic_data[:10] %}
+              <tr class="border-b border-light-2 hover:bg-light-1/50">
+                <td class="py-3 px-2 font-mono text-sm">{{ data.source_ip }}</td>
+                <td class="py-3 px-2 font-mono text-sm">{{ data.dest_ip }}</td>
+                <td class="py-3 px-2">
+                  <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">{{ data.traffic_type }}</span>
+                </td>
+                <td class="py-3 px-2">
+                  {% if data.predicted_type == '白流量' %}
+                    <span class="text-xs px-2 py-1 bg-success/10 text-success rounded-full">白流量</span>
+                  {% else %}
+                    <span class="text-xs px-2 py-1 bg-warning/10 text-warning rounded-full">{{ data.predicted_type or '可疑流量' }}</span>
+                  {% endif %}
+                </td>
+                <td class="py-3 px-2 text-sm text-dark-2">{{ data.timestamp.strftime('%m-%d %H:%M') if data.timestamp else '--' }}</td>
+                <td class="py-3 px-2">
+                  <button class="text-primary text-sm hover:underline" onclick="copyToClipboard('{{ data.source_ip }} -> {{ data.dest_ip }}')">
+                    <i class="fa fa-copy"></i> 复制
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="flex flex-col items-center justify-center py-12 text-dark-2">
+        <i class="fa fa-database text-4xl mb-3 opacity-30"></i>
+        <p>暂无分析记录</p>
+        <p class="text-sm mt-2">请上传文件或填写表单进行流量分析</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/file_drop.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const trafficForm = document.getElementById('traffic-form');
+  const clearFormBtn = document.getElementById('clear-form-btn');
+  
+  // 表单提交验证
+  trafficForm.addEventListener('submit', function(e) {
+    const sourceIp = document.getElementById('source_ip').value.trim();
+    const destIp = document.getElementById('dest_ip').value.trim();
+    const trafficType = document.getElementById('traffic_type').value;
+    const content = document.getElementById('content').value.trim();
+    
+    if (!sourceIp || !destIp || !trafficType || !content) {
+      e.preventDefault();
+      showToast('请填写完整信息', true);
+      return;
+    }
+    
+    // 显示加载状态
+    const submitBtn = trafficForm.querySelector('button[type="submit"]');
+    setLoading(submitBtn, true);
+  });
+  
+  // 清空表单
+  clearFormBtn.addEventListener('click', function() {
+    trafficForm.reset();
+    showToast('表单已重置');
+  });
+  
+  // IP地址格式验证
+  const ipInputs = document.querySelectorAll('input[pattern*="0-9"]');
+  ipInputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      const ipPattern = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+      if (this.value && !ipPattern.test(this.value)) {
+        this.classList.add('border-danger');
+        showToast('请输入有效的IP地址格式', true);
+      } else {
+        this.classList.remove('border-danger');
+      }
+    });
+  });
+  
+  // 刷新记录按钮
+  const refreshBtn = document.getElementById('refresh-records-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function() {
+      location.reload();
+    });
+  }
+});
+
+// 复制到剪贴板功能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('已复制到剪贴板');
+  }).catch(() => {
+    showToast('复制失败', true);
+  });
+}
+
+// 设置按钮加载状态
+function setLoading(button, loading) {
+  if (loading) {
+    button.disabled = true;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> 分析中...';
+    button.dataset.originalText = originalText;
+  } else {
+    button.disabled = false;
+    if (button.dataset.originalText) {
+      button.innerHTML = button.dataset.originalText;
+    }
+  }
+}
+
+// 显示提示消息
+function showToast(message, isError = false) {
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+  
+  toastMessage.textContent = message;
+  
+  if (isError) {
+    toast.classList.remove('bg-success');
+    toast.classList.add('bg-danger');
+  } else {
+    toast.classList.remove('bg-danger');
+    toast.classList.add('bg-success');
+  }
+  
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+</script>
+{% endblock %}

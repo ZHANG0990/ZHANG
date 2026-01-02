@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}白流量规则管理{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/white_rules.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">白流量规则管理</h2>
+  <button id="add-rule-btn" class="btn btn-primary">
+    <i class="fa fa-plus"></i> 新增规则
+  </button>
+</div>
+
+<!-- 规则统计卡片 -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-card-content">
+      <div class="stat-card-info">
+        <p>总规则数</p>
+        <h3 id="total-rules">0</h3>
+      </div>
+      <div class="stat-card-icon primary">
+        <i class="fa fa-list"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="stat-card">
+    <div class="stat-card-content">
+      <div class="stat-card-info">
+        <p>启用中规则</p>
+        <h3 id="active-rules">0</h3>
+      </div>
+      <div class="stat-card-icon success">
+        <i class="fa fa-check"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="stat-card">
+    <div class="stat-card-content">
+      <div class="stat-card-info">
+        <p>已停用规则</p>
+        <h3 id="disabled-rules">0</h3>
+      </div>
+      <div class="stat-card-icon secondary">
+        <i class="fa fa-pause"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 规则列表 -->
+<div class="rules-container">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="font-bold">白流量过滤规则</h3>
+    <div class="search-filter-area">
+      <div class="search-input-wrapper">
+        <input type="text" id="search-rules" class="search-input" placeholder="搜索规则...">
+        <i class="fa fa-search search-icon"></i>
+      </div>
+      <div class="filter-select-wrapper">
+        <select id="filter-status" class="filter-select">
+          <option value="">全部状态</option>
+          <option value="enabled">启用中</option>
+          <option value="disabled">已停用</option>
+        </select>
+        <i class="fa fa-chevron-down filter-select-icon"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div id="rules-container">
+    <div class="empty-state hidden" id="empty-rules-state">
+      <i class="fa fa-filter"></i>
+      <p>暂无规则，请点击"新增规则"添加</p>
+    </div>
+  </div>
+</div>
+
+<!-- 新增/编辑规则模态框 -->
+<div id="rule-modal" class="modal-overlay hidden">
+  <div class="modal-content" id="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">新增白流量规则</h3>
+      <button id="close-modal" class="modal-close-btn">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="rule-form">
+        <div class="form-group">
+          <label for="rule-name" class="form-label">规则名称</label>
+          <input type="text" id="rule-name" class="form-input" placeholder="请输入规则名称" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="rule-type" class="form-label">流量类型</label>
+          <select id="rule-type" class="form-select" required>
+            <option value="ip">IP地址</option>
+            <option value="domain">域名</option>
+            <option value="port">端口</option>
+            <option value="protocol">协议</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="rule-condition" class="form-label">匹配条件</label>
+          <div class="condition-buttons">
+            <button type="button" class="condition-btn active" data-type="ip">IP地址</button>
+            <button type="button" class="condition-btn" data-type="domain">域名</button>
+            <button type="button" class="condition-btn" data-type="port">端口</button>
+            <button type="button" class="condition-btn" data-type="protocol">协议</button>
+          </div>
+          <input type="text" id="rule-condition" class="form-input" placeholder="例如: 192.168.1.0/24" required>
+          <p class="form-help">支持IP段（192.168.1.0/24）、域名通配符（*.example.com）等格式</p>
+        </div>
+        
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="rule-enable" checked>
+          <label for="rule-enable">启用此规则</label>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" id="cancel-rule" class="btn btn-outline btn-full">取消</button>
+          <button type="submit" class="btn btn-primary btn-full">保存规则</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+</div>
+
+<!-- 后端数据传递 -->
+<script id="rules-data" type="application/json">{{ rules | tojson | safe }}</script>
+
+<!-- 引入JavaScript -->
+<script src="{{ url_for('static', filename='js/white_rules.js') }}"></script>
+{% endblock %}

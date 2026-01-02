@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block auth_content %}
+<div class="fixed inset-0 z-40 flex items-center justify-center bg-gray-100 p-4">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300">
+    <div class="p-6 sm:p-8">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+          <i class="fa fa-user-plus text-2xl text-primary"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-dark">账号注册</h2>
+        <p class="text-dark-2 mt-2">创建账号以使用AI流量守卫者</p>
+      </div>
+      
+      <form method="POST" id="register-form">
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-dark-2 mb-1">用户名</label>
+          <input type="text" id="username" name="username" class="form-input" placeholder="请设置用户名" required>
+        </div>
+        
+        <div class="mb-6">
+          <label for="password" class="block text-sm font-medium text-dark-2 mb-1">密码</label>
+          <input type="password" id="password" name="password" class="form-input" placeholder="请设置密码（至少6位）" required minlength="6">
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-full justify-center">
+          <i class="fa fa-user-plus"></i> 注册
+        </button>
+        
+        <div class="mt-4 text-center">
+          <a href="{{ url_for('auth.login') }}" class="text-primary text-sm hover:underline">
+            已有账号？立即登录
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('register-form');
+  
+  form.addEventListener('submit', function(e) {
+    if (!validateForm('register-form')) {
+      e.preventDefault();
+      showToast('请填写完整信息', 'error');
+    }
+  });
+});
+</script>
+{% endblock %}
