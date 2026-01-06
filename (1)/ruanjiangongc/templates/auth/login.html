@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- 简单的透明导航 -->
+<div class="d-flex align-items-center p-3">
+    <a href="{{ url_for('intro') }}" class="text-dark"><i class="fas fa-times fa-lg"></i></a>
+</div>
+
+<div class="p-4 mt-3">
+    <h3 class="fw-bold mb-4">欢迎回来</h3>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="small text-muted fw-bold">用户名</label>
+            <input type="text" name="username" class="form-control form-control-lg border-0 bg-light" required>
+        </div>
+        <div class="mb-4">
+            <label class="small text-muted fw-bold">密码</label>
+            <input type="password" name="password" class="form-control form-control-lg border-0 bg-light" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
+            登 录
+        </button>
+    </form>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('register') }}" class="text-decoration-none small text-muted">没有账号？去注册</a>
+    </div>
+</div>
+{% endblock %}

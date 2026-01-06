@@ -1,0 +1,14 @@
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar-menu" id="sidebarMenu">
+    <div class="text-center mb-4">
+        <div class="bg-{{ current_user.color }} rounded-circle d-inline-block text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 24px;">
+            {{ current_user.username[0].upper() }}
+        </div>
+        <h5 class="mt-2">{{ current_user.username }}</h5>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="sidebar-link"><i class="fas fa-home me-3"></i> 门锁主控</a>
+    <a href="{{ url_for('keys') }}" class="sidebar-link"><i class="fas fa-key me-3"></i> 钥匙管理</a>
+    <a href="{{ url_for('history') }}" class="sidebar-link"><i class="fas fa-history me-3"></i> 审计日志</a>
+    <a href="{{ url_for('settings') }}" class="sidebar-link"><i class="fas fa-cog me-3"></i> 设备设置</a>
+    <a href="{{ url_for('logout') }}" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt me-3"></i> 退出登录</a>
+</div>

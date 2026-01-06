@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="nav-bar">
+    <a href="{{ url_for('device_list') }}"><i class="fas fa-chevron-left"></i></a>
+    <span>{{ device.name }}</span>
+    <a href="{{ url_for('settings', device_id=device.id) }}"><i class="fas fa-cog"></i></a>
+</div>
+<div class="flex-grow-1 bg-white overflow-auto">
+    <!-- 状态显示区域 -->
+    <div id="lock-btn" class="lock-circle" onclick="toggleLock()"
+         style="border: 8px solid {% if device.status == 'locked' %}#00a0e9{% else %}#28a745{% endif %};">
+        <div class="text-center">
+            <i id="lock-icon" class="fas {% if device.status == 'locked' %}fa-lock{% else %}fa-lock-open{% endif %}"
+               style="font-size: 50px; color: #333;"></i>
+            <div id="status-text" class="mt-2 fw-bold text-secondary">
+                {% if device.status == 'locked' %}已上锁{% else %}已开启{% endif %}
+            </div>
+            <div class="mt-1 small text-muted" id="real-time-status">
+                实时状态: 连接中...
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2 px-3 mt-2">
+        <div class="col-6">
+            <a href="{{ url_for('keys', device_id=device.id) }}" class="btn btn-light w-100 py-3 border shadow-sm">
+                <i class="fas fa-key text-primary mb-1"></i><br>钥匙管理
+            </a>
+        </div>
+        <div class="col-6">
+            <a href="{{ url_for('history', device_id=device.id) }}" class="btn btn-light w-100 py-3 border shadow-sm">
+                <i class="fas fa-history text-warning mb-1"></i><br>日志
+            </a>
+        </div>
+    </div>
+
+    <!-- 最近活动 -->
+    <div class="px-3 mt-4">
+        <h6 class="text-muted mb-2">最近活动</h6>
+        <div class="list-group list-group-flush">
+            {% for log in logs %}
+            <div class="list-group-item px-0 d-flex align-items-center">
+                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 32px; height: 32px;">
+                    <i class="fas fa-{{ log.icon }} text-secondary"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="small">{{ log.user_name }} {{ log.action }}</div>
+                    <div class="text-muted" style="font-size: 11px;">
+                        {{ log.timestamp.strftime('%H:%M') }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+const deviceId = {{ device.id }};
+let currentStatus = "{{ device.status }}";
+let isPolling = false;
+
+// 更新显示状态
+function updateDisplay(status, systemLocked) {
+    const lockIcon = document.getElementById('lock-icon');
+    const statusText = document.getElementById('status-text');
+    const lockBtn = document.getElementById('lock-btn');
+    const realTimeStatus = document.getElementById('real-time-status');
+
+    if (status === 'locked') {
+        lockIcon.className = 'fas fa-lock';
+        statusText.textContent = '已上锁';
+        statusText.className = 'mt-2 fw-bold text-primary';
+        lockBtn.style.borderColor = '#00a0e9';
+    } else {
+        lockIcon.className = 'fas fa-lock-open';
+        statusText.textContent = '已开启';
+        statusText.className = 'mt-2 fw-bold text-success';
+        lockBtn.style.borderColor = '#28a745';
+    }
+
+    if (realTimeStatus) {
+        realTimeStatus.textContent = `系统状态: ${systemLocked ? '已锁定' : '已解锁'}`;
+        realTimeStatus.className = `mt-1 small ${systemLocked ? 'text-danger' : 'text-success'}`;
+    }
+
+    currentStatus = status;
+}
+
+// 显示通知
+function showNotification(message, type = 'info') {
+    // 创建通知元素
+    const notification = document.createElement('div');
+    notification.className = 'notification-toast';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#007bff'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // 3秒后移除
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// 添加CSS动画
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+// 锁定/解锁设备
+function toggleLock() {
+    fetch(`/api/toggle/${deviceId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateDisplay(data.status, data.status === 'locked');
+        showNotification(`操作成功: ${data.status === 'locked' ? '已锁定' : '已解锁'}`, 'success');
+    })
+    .catch(error => {
+        showNotification('操作失败，请重试', 'error');
+    });
+}
+
+// 实时状态轮询
+function startRealtimePolling() {
+    if (isPolling) return;
+    isPolling = true;
+
+    function poll() {
+        fetch(`/api/get_realtime_status/${deviceId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络错误');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 更新显示
+                updateDisplay(data.status, data.system_locked);
+
+                // 如果状态变化了，显示通知
+                if (data.changed) {
+                    showNotification(`状态已更新: ${data.status === 'locked' ? '🔒 已锁定' : '🔓 已解锁'}`);
+                }
+
+                // 继续轮询
+                poll();
+            })
+            .catch(error => {
+                console.error('轮询错误:', error);
+                // 5秒后重试
+                setTimeout(poll, 5000);
+            });
+    }
+
+    poll();
+}
+
+// 页面加载完成
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化显示
+    updateDisplay(currentStatus, currentStatus === 'locked');
+
+    // 开始实时轮询
+    startRealtimePolling();
+
+    // 页面可见性变化时刷新
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            // 快速检查一次状态
+            fetch(`/api/check_status/${deviceId}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateDisplay(data.status, data.system_locked);
+                });
+        }
+    });
+});
+</script>
+
+<style>
+.lock-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 30px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.lock-circle:active {
+    transform: scale(0.95);
+}
+
+.notification-toast {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+}
+</style>
+{% endblock %}

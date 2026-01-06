@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="nav-bar"><span></span><span>通用设置</span><span></span></div>
+<div class="flex-grow-1 bg-light p-3 overflow-auto">
+    <div class="d-flex align-items-center bg-white p-3 rounded shadow-sm mb-3">
+        <div class="bg-{{ current_user.color }} text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width:50px; height:50px; font-size:20px;">{{ current_user.username[0].upper() }}</div>
+        <div><div class="fw-bold">{{ current_user.username }}</div><div class="text-muted small">账号安全: 高</div></div>
+    </div>
+    <div class="list-group shadow-sm border-0 mb-3">
+        <button class="list-group-item border-0 py-3 d-flex justify-content-between"><span>消息推送</span><div class="form-check form-switch"><input class="form-check-input" type="checkbox" checked></div></button>
+    </div>
+    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100 rounded-pill py-2">退出登录</a>
+</div>
+{% include 'bottom_nav.html' %}
+{% endblock %}

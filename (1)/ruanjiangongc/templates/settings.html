@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="nav-bar"><a href="{{ url_for('device_control', device_id=device.id) }}"><i class="fas fa-chevron-left"></i></a><span>设置</span><span></span></div>
+<div class="flex-grow-1 bg-light p-3">
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body py-2">
+            <h6 class="text-muted small mb-2 border-bottom pb-2">信息</h6>
+            <div class="d-flex justify-content-between mb-2"><span class="small">名称</span><span class="small fw-bold">{{ device.name }}</span></div>
+            <div class="d-flex justify-content-between"><span class="small">版本</span><span class="small text-primary" id="fw">{{ device.firmware_ver }}</span></div>
+        </div>
+    </div>
+    <div class="list-group shadow-sm border-0 mb-3">
+        <button class="list-group-item border-0 py-3" onclick="update()">检查更新</button>
+    </div>
+    <div class="card border-0 shadow-sm p-3 mt-auto">
+        <form action="{{ url_for('delete_device', device_id=device.id) }}" method="POST" onsubmit="return confirm('删除设备？');">
+            <button class="btn btn-outline-danger w-100 rounded-pill py-2 small">删除设备</button>
+        </form>
+    </div>
+</div>
+<script>function update(){ fetch('/api/update/{{ device.id }}', {method:'POST'}).then(r=>r.json()).then(()=>alert('更新成功')); }</script>
+{% endblock %}

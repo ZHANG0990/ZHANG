@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between px-2 mt-1 small text-muted">
+    <span><i class="fab fa-bluetooth-b text-primary"></i> 已连接</span>
+    <span class="{% if device.battery < 20 %}text-danger{% else %}text-success{% endif %}">
+        <i class="fas fa-battery-three-quarters"></i> {{ device.battery }}%
+    </span>
+</div>
+
+<div class="text-center mt-3">
+    <h3 class="fw-light mb-0">{{ device.name }}</h3>
+    <p class="text-muted small"><i class="fas fa-map-marker-alt text-danger"></i> 已校准位置</p>
+</div>
+
+<!-- 互动圆环 -->
+<div class="lock-circle-container">
+    <div id="lockCircle" class="lock-circle {{ device.status }}" onclick="toggleLock()">
+        <div class="lock-hole"></div>
+        <div style="position: absolute; bottom: -40px; font-weight: bold; color: #555;">
+            <span id="statusText">{% if device.status == 'locked' %}已锁定{% else %}已解锁{% endif %}</span>
+        </div>
+        <div class="spinner-border text-secondary position-absolute" id="lockSpinner" style="display:none;"></div>
+    </div>
+</div>
+
+<!-- 快捷入口 -->
+<div class="row g-2 mt-5 px-1">
+    <div class="col-4">
+        <a href="{{ url_for('keys') }}" class="btn btn-light w-100 py-3 shadow-sm rounded-4 border-0">
+            <i class="fas fa-user-plus text-primary fs-4"></i>
+            <div class="small mt-2 text-muted">分享</div>
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="{{ url_for('history') }}" class="btn btn-light w-100 py-3 shadow-sm rounded-4 border-0">
+            <i class="fas fa-list-alt text-warning fs-4"></i>
+            <div class="small mt-2 text-muted">日志</div>
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="{{ url_for('settings') }}" class="btn btn-light w-100 py-3 shadow-sm rounded-4 border-0">
+            <i class="fas fa-cog text-secondary fs-4"></i>
+            <div class="small mt-2 text-muted">设置</div>
+        </a>
+    </div>
+</div>
+
+<!-- 日志预览 -->
+<div class="mt-4 px-1">
+    <h6 class="text-muted mb-2 ps-2">最近动态</h6>
+    <div class="list-group list-group-flush">
+        {% for log in logs %}
+        <div class="list-group-item bg-transparent px-2 py-2 border-0 d-flex align-items-center">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width:32px; height:32px;">
+                <i class="fas fa-{{ log.icon }} text-secondary"></i>
+            </div>
+            <div class="flex-grow-1 lh-1">
+                <span class="small fw-bold">{{ log.user_name }}</span>
+                <div class="text-muted" style="font-size: 11px; margin-top:2px;">{{ log.action }}</div>
+            </div>
+            <span class="text-muted" style="font-size: 10px;">{{ log.timestamp.strftime('%H:%M') }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleLock() {
+        const circle = document.getElementById('lockCircle');
+        const spinner = document.getElementById('lockSpinner');
+        const text = document.getElementById('statusText');
+
+        spinner.style.display = 'block';
+        text.style.opacity = '0.5';
+
+        fetch(`/api/toggle/{{ device.id }}`, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                spinner.style.display = 'none';
+                text.style.opacity = '1';
+                if (data.status === 'unlocked') {
+                    circle.classList.remove('locked'); circle.classList.add('unlocked');
+                    text.innerText = '已解锁';
+                } else {
+                    circle.classList.remove('unlocked'); circle.classList.add('locked');
+                    text.innerText = '已锁定';
+                }
+            });
+    }
+</script>
+{% endblock %}

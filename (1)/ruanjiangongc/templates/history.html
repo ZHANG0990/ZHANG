@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- 顶部导航 -->
+<div class="nav-bar">
+    <a href="{{ url_for('device_control', device_id=device.id) }}"><i class="fas fa-chevron-left"></i></a>
+    <span>审计日志</span>
+    <span></span> <!-- 占位符，保持中间标题居中 -->
+</div>
+
+<!-- 内容区域 -->
+<div class="flex-grow-1 overflow-auto bg-white">
+    <div class="list-group list-group-flush">
+        {% for log in logs %}
+        <div class="list-group-item px-3 py-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <!-- 用户名和头像 -->
+                <div class="d-flex align-items-center">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                        <i class="fas fa-{{ log.icon }} text-secondary small"></i>
+                    </div>
+                    <span class="fw-bold text-dark">{{ log.user_name }}</span>
+                </div>
+                <!-- 时间 -->
+                <small class="text-muted" style="font-size: 12px;">{{ log.timestamp.strftime('%m-%d %H:%M') }}</small>
+            </div>
+            <!-- 具体操作内容 -->
+            <div class="ps-5 text-secondary small">
+                {{ log.action }}
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5 text-muted small">
+            暂无历史记录
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

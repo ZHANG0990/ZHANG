@@ -1,0 +1,160 @@
+/* static/css/mobile.css - iPhone样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.phone-wrapper {
+    width: 375px;
+    height: 667px;
+    background: #fff;
+    border-radius: 40px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+    border: 10px solid #000;
+}
+
+.speaker {
+    width: 100px;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    padding-top: 30px;
+    background: #f2f2f7;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-btn {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #ccc;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 导航栏样式 */
+.nav-bar {
+    background: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e5ea;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.nav-bar a {
+    color: #007aff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* 底部标签栏 */
+.bottom-tab {
+    background: #fff;
+    padding: 10px 0;
+    border-top: 1px solid #e5e5ea;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #8e8e93;
+    text-decoration: none;
+    font-size: 10px;
+    transition: color 0.3s;
+}
+
+.tab-item.active {
+    color: #007aff;
+}
+
+.tab-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* 设备列表样式 */
+.device-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+.device-icon {
+    width: 40px;
+    height: 40px;
+    background: #007aff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 15px;
+}
+
+.info-strip {
+    background: #f8f8fa;
+    padding: 8px 20px;
+    font-size: 12px;
+    color: #8e8e93;
+    border-bottom: 1px solid #e5e5ea;
+}
+
+/* 蓝牙状态栏 */
+.blue-status-bar {
+    background: #007aff;
+    color: white;
+    padding: 8px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.bg-white {
+    background: white;
+}
+
+.bg-light {
+    background: #f2f2f7;
+}

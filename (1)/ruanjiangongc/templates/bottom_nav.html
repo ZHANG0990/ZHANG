@@ -1,0 +1,14 @@
+<div class="bottom-tab">
+    <a href="{{ url_for('device_list') }}" class="tab-item {% if request.endpoint == 'device_list' %}active{% endif %}">
+        <i class="fas fa-lock"></i><span>门锁</span>
+    </a>
+    <a href="{{ url_for('all_keys') }}" class="tab-item {% if request.endpoint == 'all_keys' %}active{% endif %}">
+        <i class="fas fa-key"></i><span>钥匙</span>
+    </a>
+    <a href="{{ url_for('all_history') }}" class="tab-item {% if request.endpoint == 'all_history' %}active{% endif %}">
+        <i class="fas fa-eye"></i><span>监控</span>
+    </a>
+    <a href="{{ url_for('app_settings') }}" class="tab-item {% if request.endpoint == 'app_settings' %}active{% endif %}">
+        <i class="fas fa-asterisk"></i><span>设置</span>
+    </a>
+</div>
