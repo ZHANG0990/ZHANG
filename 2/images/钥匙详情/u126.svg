@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="180px" height="180px" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <path d="M 90 9  C 135.36 9  171 44.64  171 90  C 171 135.36  135.36 171  90 171  C 44.64 171  9 135.36  9 90  C 9 44.64  44.64 9  90 9  Z " fill-rule="nonzero" fill="#ffffff" stroke="none" />
+    <path d="M 90 5  C 137.6 5  175 42.4  175 90  C 175 137.6  137.6 175  90 175  C 42.4 175  5 137.6  5 90  C 5 42.4  42.4 5  90 5  Z " stroke-width="10" stroke="#399b20" fill="none" />
+  </g>
+</svg>
